@@ -17,7 +17,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background-color: #f8f9fa;
+    background-color: #afeeb4;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
@@ -35,47 +35,48 @@ body {
   }
   
   .logo a:hover {
-    color: #007bff; /* Change color on hover */
+    color: #6a8bae; /* Change color on hover */
   }
   
   /* Navigation Links Styles */
-  .nav {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .nav a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    transition: color 0.3s ease; /* Smooth transition for hover effect */
-  }
-  
-  .nav a:hover {
-    color: #007bff; /* Change color on hover */
-  }
+.nav {
+  display: flex;
+  align-items: center; /* Align items vertically in the center */
+  gap: 20px; /* Consistent spacing between items */
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.nav a:hover {
+  color: #117c56;
+}
   
   /* Sign-In Button Styles */
   .signin-link {
     padding: 8px 16px;
-    background-color: #007bff;
-    color: white;
+    background-color: #28a745;
+    color: rgb(9, 9, 9);
     border-radius: 4px;
     text-decoration: none;
     transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effect */
   }
   
   .signin-link:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    color: #fff; /* Keep text color white */
+    background-color: #1f8d3a; /* Darker green on hover */
+    color: #fff; 
   }
   
 /* Hero Section Styles */
 .hero {
-    padding: 10px 20px; /* Increased padding for more height */
-    background-color: #e9ecef;
+    padding: 10px 20px;
+    background-color: #afeeb4; /* background colour of the "personalised diet assistant section */
     margin-bottom: 40px;
-    min-height: 50vh; /* Set a minimum height of 80% of the viewport height */
+    min-height: 50vh; 
     display: flex;
     flex-direction: column;
     justify-content: center; /* Center content vertically */
@@ -84,22 +85,22 @@ body {
   }
   
   .hero h1 {
-    font-size: 40px; /* Increased font size for the heading */
+    font-size: 40px; /* font size for heading */
     margin-bottom: 20px;
   }
   
   .hero p {
-    font-size: 22px; /* Increased font size for the paragraph */
-    margin-bottom: 20px; /* Increased margin for more spacing */
+    font-size: 22px; /* font size for paragraph */
+    margin-bottom: 20px; 
   }
   
   .cta-button {
-    padding: 16px 32px; /* Increased button size */
+    padding: 16px 32px; /* button size */
     background-color: #28a745;
     color: white;
     border-radius: 4px;
     text-decoration: none;
-    font-size: 1.5rem; /* Increased font size for the button */
+    font-size: 1.5rem; /* font size for the button */
     transition: background-color 0.3s ease;
   }
   
@@ -143,7 +144,7 @@ body {
   
   .feature p {
     font-size: 16px;
-    color: #666;
+    color: #666666;
   }
   
   .image-placeholder {

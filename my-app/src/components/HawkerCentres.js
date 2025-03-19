@@ -7,21 +7,6 @@ function HawkerCentres() {
 
   return (
     <div className="hawker-centres">
-      {/* Back Button */}
-      <button 
-        onClick={() => navigate('/')} 
-        style={{ 
-          marginBottom: '20px', 
-          padding: '10px 20px', 
-          backgroundColor: '#007bff', 
-          color: 'white', 
-          border: 'none', 
-          borderRadius: '5px', 
-          cursor: 'pointer' 
-        }}
-      >
-        Back to Landing Page
-      </button>
 
       <h1>Location</h1>
       <p>[Nearest to you] 500m</p>

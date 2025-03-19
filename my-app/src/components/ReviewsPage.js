@@ -32,8 +32,6 @@ function ReviewsPage() {
   return (
     <div className="reviews-page">
       <h1>Reviews</h1>
-      <button onClick={() => navigate('/hawker-centres')}>Back to Location</button>
-
       <div className="reviews-section">
         {reviews.map((review, index) => (
           <div key={index} className="review-card">
@@ -50,6 +48,9 @@ function ReviewsPage() {
           </div>
         ))}
       </div>
+      
+      <button onClick={() => navigate('/hawker-centres')}>Back to Location</button>
+    
     </div>
   );
 }
