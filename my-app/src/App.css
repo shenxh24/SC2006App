@@ -4,11 +4,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-.App {
-  text-align: center;
-  padding: 20px;
+  color: #333;
 }
 
 /* Header Styles */
@@ -16,89 +12,75 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  background-color: #afeeb4;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  background-color: #333; /* Dark background for the header */
+  color: white; /* Text color */
 }
 
-.logo {
-  font-size: 24px;
-  font-weight: bold;
+.header .logo a {
+  display: inline-block; /* Ensure the anchor is visible */
+  width: 100px; /* Set the width of the logo */
+  height: 50px; /* Set the height of the logo */
+  background-image: url('/Users/xhshen/Desktop/SC2006App/my-app/public/removebg.png'); /* Add the logo as a background image */
+  background-size: contain; /* Ensure the logo fits within the dimensions */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  text-indent: -9999px; /* Hide the text content (if any) */
+  text-decoration: none; /* Remove underline */
 }
 
-.logo a {
-  text-decoration: none;
-  color: #333;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.logo a:hover {
-  color: #28a745;
-}
-
-.nav {
+.header .nav {
   display: flex;
-  align-items: center;
-  gap: 20px;
+  gap: 20px; /* Space between links */
 }
 
-.nav a {
-  text-decoration: none;
-  color: #333;
-  font-weight: bold;
-  transition: color 0.3s ease;
+.header .nav a {
+  color: white; /* Link text color */
+  text-decoration: none; /* Remove underline */
+  font-size: 16px;
+  transition: color 0.3s ease; /* Smooth color transition on hover */
 }
 
-.nav a:hover {
-  color: #117c56;
+.header .nav a:hover {
+  color: #8fd277; /* Change color on hover */
 }
 
-.signin-link {
-  padding: 8px 16px;
-  background-color: #28a745;
-  color: rgb(9, 9, 9);
-  border-radius: 4px;
-  text-decoration: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
+.header .nav .signin-link {
+  background-color: #28a745; /* Highlight the Sign In link */
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #333; /* Text color for Sign In */
 }
 
-.signin-link:hover {
-  background-color: #1f8d3a;
-  color: #fff;
+.header .nav .signin-link:hover {
+  background-color: #218838; /* Darker background on hover */
 }
 
 /* Hero Section */
 .hero {
-  padding: 50px 20px;
-  background-color: #afeeb4;
-  margin-bottom: 40px;
-  min-height: 50vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  padding: 60px 20px;
   text-align: center;
+  background-color: #1d2f41;
+  background-image: 'background2.jpeg';
+  color: #333;
 }
 
 .hero h1 {
-  font-size: 40px;
+  font-size: 36px;
   margin-bottom: 20px;
 }
 
 .hero p {
-  font-size: 22px;
+  font-size: 18px;
   margin-bottom: 20px;
 }
 
 .cta-button {
-  padding: 16px 32px;
+  padding: 12px 24px;
   background-color: #28a745;
   color: white;
   border-radius: 4px;
   text-decoration: none;
-  font-size: 1.5rem;
-  transition: background-color 0.3s ease;
+  font-size: 16px;
 }
 
 .cta-button:hover {
@@ -107,71 +89,92 @@ body {
 
 /* Features Section */
 .features {
-  padding: 20px;
+  padding: 40px 20px;
+  text-align: center;
 }
 
-.feature-grid {
+.features h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.feature-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-}
-
-.feature-link {
-  text-decoration: none;
-  color: inherit;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .feature {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .feature:hover {
-  transform: translateY(-10px);
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feature .logo {
+  width: 120x; /* Adjust the size of the logo container */
+  height: 120px; /* Adjust the size of the logo container */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.feature .logo img {
+  max-width: 100%; /* Ensure the image fits within the container */
+  max-height: 100%; /* Ensure the image fits within the container */
+  border-radius: 8px; /* Optional: Add rounded corners to the logo */
 }
 
 .feature h2 {
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 10px;
+  color: #333; /* Adjust the color as needed */
 }
 
 .feature p {
-  font-size: 16px;
+  font-size: 14px;
   color: #666;
+  line-height: 1.5;
 }
 
-.feature-grid .feature-link:nth-child(4) {
-  grid-column: 1 / span 1;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .feature-list {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
 }
 
-.feature-grid .feature-link:nth-child(5) {
-  grid-column: 3 / span 1;
+@media (max-width: 480px) {
+  .feature-list {
+    grid-template-columns: 1fr;
+  }
 }
-
-.feature-grid {
-  justify-content: center;
-}
-
 /* Footer */
 .footer {
   text-align: center;
   padding: 20px;
-  background-color: #f1f1f1;
+  background-color: #f8f9fa;
   margin-top: 40px;
 }
 
 .footer p {
   margin: 0;
+  font-size: 14px;
   color: #666;
 }
-
 /* Personal Details Page */
 .personal-details {
   padding: 20px;
