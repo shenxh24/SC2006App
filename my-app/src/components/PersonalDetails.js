@@ -35,12 +35,6 @@ function PersonalDetails() {
       <h2>Details</h2>
       <p>Enter your physical traits to get the most personalized experience with BitebyByte</p>
 
-      {/* Goal Section */}
-      <div className="goal-section">
-        <h3>Goal</h3>
-        <p>What do you hope to achieve through using BitebyByte? (e.g., lose weight, bodybuilding, etc.)</p>
-      </div>
-
       {/* Form Section */}
       <form onSubmit={handleSubmit} className="details-form">
         <label>
