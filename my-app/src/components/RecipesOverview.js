@@ -1,63 +1,135 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import '../App.css';
 
 const RecipesOverview = () => {
-  const [recipes] = useState([
-    { id: 1, name: 'Recipe 1', calories: 300, fat: 10, protein: 20, image: 'https://via.placeholder.com/150' },
-    { id: 2, name: 'Recipe 2', calories: 250, fat: 5, protein: 15, image: 'https://via.placeholder.com/150' },
-    { id: 3, name: 'Recipe 3', calories: 400, fat: 15, protein: 25, image: 'https://via.placeholder.com/150' },
-    { id: 4, name: 'Recipe 4', calories: 350, fat: 12, protein: 18, image: 'https://via.placeholder.com/150' },
-  ]);
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('balanced'); // Default filter
+  const API_KEY = '92f7abf67e7b49f0a04d4a265bccba27'; // Replace with your key
 
-  const [filter, setFilter] = useState('recommended'); // Default filter
+  // Fetch recipes based on filter
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      setLoading(true);
+      try {
+        let params = {
+          apiKey: API_KEY,
+          number: 8, // Number of recipes to fetch
+          addRecipeNutrition: true,
+        };
 
-  // Function to sort recipes based on the selected filter
-  const sortRecipes = (recipes, filter) => {
-    switch (filter) {
-      case 'calories-asc':
-        return [...recipes].sort((a, b) => a.calories - b.calories);
-      case 'fat-asc':
-        return [...recipes].sort((a, b) => a.fat - b.fat);
-      case 'protein-asc':
-        return [...recipes].sort((a, b) => a.protein - b.protein);
-      case 'recommended':
-      default:
-        return recipes; // No sorting for recommended
-    }
-  };
+        // Adjust parameters based on filter
+        switch (filter) {
+          case 'low-calorie':
+            params.maxCalories = 500;
+            params.sort = 'calories';
+            params.sortDirection = 'asc';
+            break;
+          case 'high-protein':
+            params.minProtein = 20;
+            params.sort = 'protein';
+            params.sortDirection = 'desc';
+            break;
+          case 'low-fat':
+            params.maxFat = 10;
+            params.sort = 'fat';
+            params.sortDirection = 'asc';
+            break;
+          case 'vegetarian':
+            params.diet = 'vegetarian';
+            break;
+          default: // 'balanced'
+            params.diet = 'balanced';
+        }
 
-  const sortedRecipes = sortRecipes(recipes, filter);
+        const response = await axios.get(
+          'https://api.spoonacular.com/recipes/complexSearch',
+          { params }
+        );
+
+        // Format recipes with nutrition data
+        const formattedRecipes = response.data.results.map(recipe => ({
+          id: recipe.id,
+          name: recipe.title,
+          image: recipe.image,
+          calories: recipe.nutrition?.nutrients.find(n => n.name === 'Calories')?.amount || 0,
+          fat: recipe.nutrition?.nutrients.find(n => n.name === 'Fat')?.amount || 0,
+          protein: recipe.nutrition?.nutrients.find(n => n.name === 'Protein')?.amount || 0,
+        }));
+
+        setRecipes(formattedRecipes);
+      } catch (error) {
+        console.error('Error fetching recipes:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecipes();
+  }, [filter]);
 
   return (
     <div className="recipes-overview">
-      <h1>Recipes Overview</h1>
+      <h1>Recipe Recommendations</h1>
 
-      {/* Filter Options */}
-      <div className="filter-options">
-        <label>
-          Sort by:
-          <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-            <option value="recommended">Recommended</option>
-            <option value="calories-asc">Calories (Low to High)</option>
-            <option value="fat-asc">Fat (Low to High)</option>
-            <option value="protein-asc">Protein (Low to High)</option>
-          </select>
-        </label>
+      {/* Category Filter */}
+      <div className="category-filter">
+        <h3>Filter by Dietary Preference:</h3>
+        <div className="filter-buttons">
+          <button 
+            className={filter === 'balanced' ? 'active' : ''}
+            onClick={() => setFilter('balanced')}
+          >
+            Balanced
+          </button>
+          <button 
+            className={filter === 'low-calorie' ? 'active' : ''}
+            onClick={() => setFilter('low-calorie')}
+          >
+            Low Calorie
+          </button>
+          <button 
+            className={filter === 'high-protein' ? 'active' : ''}
+            onClick={() => setFilter('high-protein')}
+          >
+            High Protein
+          </button>
+          <button 
+            className={filter === 'low-fat' ? 'active' : ''}
+            onClick={() => setFilter('low-fat')}
+          >
+            Low Fat
+          </button>
+          <button 
+            className={filter === 'vegetarian' ? 'active' : ''}
+            onClick={() => setFilter('vegetarian')}
+          >
+            Vegetarian
+          </button>
+        </div>
       </div>
+
+      {/* Loading State */}
+      {loading && <div className="loading">Loading recipes...</div>}
 
       {/* Recipe List */}
       <div className="recipe-list">
-        {sortedRecipes.map((recipe) => (
-          <div key={recipe.id} className="recipe-item">
+        {recipes.map((recipe) => (
+          <div key={recipe.id} className="recipe-card">
             <img src={recipe.image} alt={recipe.name} className="recipe-image" />
-            <h3>{recipe.name}</h3>
-            <p>Calories: {recipe.calories} kcal</p>
-            <p>Fat: {recipe.fat} g</p>
-            <p>Protein: {recipe.protein} g</p>
-            <Link to={`/recipe/${recipe.id}`} className="view-details-button">
-              View Details
-            </Link>
+            <div className="recipe-info">
+              <h3>{recipe.name}</h3>
+              <div className="nutrition-facts">
+                <p><span className="label">Calories:</span> {Math.round(recipe.calories)} kcal</p>
+                <p><span className="label">Protein:</span> {Math.round(recipe.protein)}g</p>
+                <p><span className="label">Fat:</span> {Math.round(recipe.fat)}g</p>
+              </div>
+              <Link to={`/recipe/${recipe.id}`} className="view-details-button">
+                View Details
+              </Link>
+            </div>
           </div>
         ))}
       </div>
