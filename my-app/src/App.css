@@ -13,46 +13,181 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #333; /* Dark background for the header */
-  color: white; /* Text color */
+  background-color: #333;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .header .logo a {
-  display: inline-block; /* Ensure the anchor is visible */
-  width: 100px; /* Set the width of the logo */
-  height: 50px; /* Set the height of the logo */
-  background-image: url('/Users/xhshen/Desktop/SC2006App/my-app/public/removebg.png'); /* Add the logo as a background image */
-  background-size: contain; /* Ensure the logo fits within the dimensions */
-  background-repeat: no-repeat; /* Prevent the image from repeating */
-  text-indent: -9999px; /* Hide the text content (if any) */
-  text-decoration: none; /* Remove underline */
+  display: inline-block;
+  width: 100px;
+  height: 50px;
+  background-image: url('/Users/xhshen/Desktop/SC2006App/my-app/public/removebg.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  text-indent: -9999px;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.header .logo a:hover {
+  transform: scale(1.05);
 }
 
 .header .nav {
   display: flex;
-  gap: 20px; /* Space between links */
+  gap: 20px;
+  align-items: center;
 }
 
 .header .nav a {
-  color: white; /* Link text color */
-  text-decoration: none; /* Remove underline */
+  color: white;
+  text-decoration: none;
   font-size: 16px;
-  transition: color 0.3s ease; /* Smooth color transition on hover */
+  font-weight: 500;
+  padding: 8px 0;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
 .header .nav a:hover {
-  color: #8fd277; /* Change color on hover */
+  color: #8fd277;
 }
 
-.header .nav .signin-link {
-  background-color: #28a745; /* Highlight the Sign In link */
+.header .nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #8fd277;
+  transition: width 0.3s ease;
+}
+
+.header .nav a:hover::after {
+  width: 100%;
+}
+
+/* Profile Section */
+.profile-container {
+  position: relative;
+  margin-left: 15px;
+}
+
+.profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
   padding: 5px 10px;
-  border-radius: 5px;
-  color: #333; /* Text color for Sign In */
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
 }
 
-.header .nav .signin-link:hover {
-  background-color: #218838; /* Darker background on hover */
+.profile-trigger:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.profile-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #8fd277;
+}
+
+.username {
+  font-weight: 500;
+  color: white;
+}
+
+.profile-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: #444;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  padding: 10px 0;
+  min-width: 180px;
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  transform: translateY(10px);
+}
+
+.profile-container:hover .profile-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  display: block;
+  padding: 10px 20px;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #8fd277;
+}
+
+.sign-out-btn {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  color: #ff6b6b;
+  cursor: pointer;
+  font: inherit;
+  padding: 10px 20px;
+}
+
+.sign-out-btn:hover {
+  color: #ff5252;
+}
+
+/* Sign In Link */
+.signin-link {
+  background-color: #28a745;
+  padding: 8px 16px;
+  border-radius: 20px;
+  color: white;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.signin-link:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    padding: 15px;
+  }
+  
+  .header .nav {
+    margin-top: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .profile-container {
+    margin-left: 0;
+    margin-top: 10px;
+  }
 }
 
 /* Hero Section */
