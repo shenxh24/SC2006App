@@ -129,10 +129,13 @@ body {
 
 .dropdown-item {
   display: block;
-  padding: 10px 20px;
+  padding: 10px 20px 10px 30px; /* Increased left padding */
   color: white;
   text-decoration: none;
   transition: background-color 0.2s ease;
+  position: relative;
+  border-left: 4px solid transparent; /* Add transparent border by default */
+  margin-left: 8px; /* Optional: creates space for border */
 }
 
 .dropdown-item:hover {
