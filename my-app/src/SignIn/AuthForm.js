@@ -1,5 +1,5 @@
-// src/components/SignIn/AuthForm.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Add this import
 import { auth } from '../firebase';
 import {
   signInWithEmailAndPassword,
@@ -10,6 +10,7 @@ const AuthForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate(); // Initialize the navigate function
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,9 +18,11 @@ const AuthForm = () => {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
         alert("✅ Logged in!");
+        navigate('/'); // Redirect to landing page after successful login
       } else {
         await createUserWithEmailAndPassword(auth, email, password);
         alert("✅ Account created!");
+        navigate('/'); // Redirect to landing page after successful registration
       }
     } catch (error) {
       alert(`❌ ${error.message}`);

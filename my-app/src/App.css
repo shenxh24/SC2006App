@@ -313,6 +313,122 @@ body {
   font-size: 14px;
   color: #666;
 }
+
+/* Personal Details Goals Display */
+.calculated-goals {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.goals-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin: 20px 0;
+}
+
+@media (min-width: 768px) {
+  .goals-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.goal-item {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.goal-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #3498db;
+  display: block;
+}
+
+.goal-label {
+  color: #7f8c8d;
+  font-size: 14px;
+  display: block;
+}
+
+.tracker-button {
+  background: #2ecc71;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 300px;
+  margin: 20px auto 0;
+  display: block;
+  text-align: center;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Form Styling (if needed) */
+.details-form {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.save-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.save-button:hover {
+  background-color: #2980b9;
+}
+
 /* Personal Details Page */
 .personal-details {
   padding: 20px;
@@ -385,119 +501,259 @@ body {
   background-color: #444;
 }
 
-/* Tracker Page */
+/* Tracker Section Styles */
 .tracker {
-  padding: 20px;
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
 }
 
 .tracker h1 {
-  font-size: 36px;
-  margin-bottom: 20px;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 0.5rem;
 }
 
 .tracker p {
-  font-size: 18px;
-  color: #555;
-  margin-bottom: 20px;
+  text-align: center;
+  color: #7f8c8d;
+  margin-bottom: 2rem;
 }
 
+/* Food Form Styles */
 .food-form {
-  margin-bottom: 20px;
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
 }
 
-.food-form label {
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+label {
   display: block;
-  margin-bottom: 10px;
-  font-size: 16px;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #2c3e50;
 }
 
-.food-form input[type="text"],
-.food-form input[type="number"] {
+input[type="text"],
+input[type="number"],
+select {
   width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
 }
 
-.food-form input[type="checkbox"] {
-  margin-right: 10px;
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  border-color: #3498db;
+  outline: none;
 }
 
-.food-form button {
-  padding: 10px 20px;
-  background-color: #282c34;
+.checkbox {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.checkbox label {
+  margin-bottom: 0;
+  margin-left: 0.5rem;
+  font-weight: normal;
+}
+
+.add-button {
+  background-color: #3498db;
   color: white;
   border: none;
-  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1rem;
   cursor: pointer;
-  font-size: 16px;
+  width: 100%;
+  transition: background-color 0.3s;
 }
 
-.food-form button:hover {
-  background-color: #444;
+.add-button:hover {
+  background-color: #2980b9;
 }
 
-.food-list {
-  margin-bottom: 20px;
-}
-
-.food-list h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.food-item {
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 5px;
-}
-
-.nutrition-totals {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #f5f5f5;
-  border-radius: 5px;
+.add-button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
 }
 
 .error-message {
-  color: red;
-  margin-top: 10px;
-}
-.buttons {
-  display: flex;
-  justify-content: space-between;
+  color: #e74c3c;
+  margin-top: 1rem;
+  text-align: center;
 }
 
-.back-button,
-.enter-button {
-  padding: 10px 20px;
-  border: none;
+/* Nutrition Summary Styles */
+.nutrition-summary {
+  background: #ecf0f1;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+}
+
+.nutrition-summary h3 {
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.nutrient-totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  text-align: center;
+}
+
+.nutrient {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.nutrient .label {
+  display: block;
+  font-weight: 600;
+  color: #7f8c8d;
+  margin-bottom: 0.5rem;
+}
+
+.nutrient .value {
+  font-size: 1.2rem;
+  color: #2c3e50;
+}
+
+/* Food List Styles */
+.food-list {
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 10px;
+}
+
+.food-list h2 {
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.food-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.food-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+}
+
+.food-info p {
+  margin: 0 0 0.5rem 0;
+  color: #7f8c8d;
+  text-align: left;
+}
+
+.nutrient-facts {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.nutrient-facts span {
+  background: #ecf0f1;
+  padding: 0.25rem 0.5rem;
   border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.tag {
+  display: inline-block;
+  background: #2ecc71;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.remove-button {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 1rem;
   cursor: pointer;
-  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+
+.remove-button:hover {
+  background: #c0392b;
+}
+
+.empty-message {
+  text-align: center;
+  color: #7f8c8d;
+  padding: 1rem;
 }
 
 .back-button {
-  background-color: #ccc;
-  color: #000;
+  display: inline-block;
+  margin-top: 2rem;
+  color: #3498db;
   text-decoration: none;
+  font-weight: 600;
 }
 
 .back-button:hover {
-  background-color: #bbb;
+  text-decoration: underline;
 }
 
-.enter-button {
-  background-color: #282c34;
-  color: white;
-}
-
-.enter-button:hover {
-  background-color: #444;
+/* Responsive Design */
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .nutrient-totals {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 /* Recipes Overview Styles */
