@@ -52,7 +52,7 @@ function LandingPage({ heroImage }) {
       <section className="hero" style={heroStyle}>
         <h1>Welcome to BitebyByte</h1>
         <p>Your personal diet assistant for a healthier lifestyle.</p>
-        <Link to="/get-started" className="cta-button">Get Started</Link>
+        <Link to="/signin" className="signin-link">Get Started</Link>
       </section>
 
       {/* Features Section */}
