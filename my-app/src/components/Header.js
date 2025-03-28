@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
+import ProfilePictureUpload from './ProfilePictureUpload';
 import '../App.css';
 
-function Header({ user }) {
+function Header({ user, profilePic, updateProfilePic }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      navigate('/'); // Redirect to home after sign out
+      navigate('/');
     } catch (error) {
       console.error('Error signing out:', error);
     }
@@ -29,20 +30,34 @@ function Header({ user }) {
         <Link to="/hawker-centres" className="nav-link">Hawker Centres</Link>
         
         {user ? (
-          <div className="profile-container" onMouseEnter={() => setShowDropdown(true)} 
-               onMouseLeave={() => setShowDropdown(false)}>
+          <div 
+            className="profile-container" 
+            onMouseEnter={() => setShowDropdown(true)} 
+            onMouseLeave={() => setShowDropdown(false)}
+          >
             <div className="profile-trigger">
-              <img 
-                src={user.photoURL || '/default-profile.png'} 
-                alt="Profile" 
-                className="profile-icon"
-              />
-              <span className="username">{user.displayName || 'My Account'}</span>
+              {profilePic ? (
+                <img 
+                  src={profilePic} 
+                  alt="Profile" 
+                  className="profile-icon"
+                />
+              ) : (
+                <div className="profile-initial">
+                  {user.email?.[0]?.toUpperCase()}
+                </div>
+              )}
+              <span className="username">{user.displayName || user.email}</span>
             </div>
             
             {showDropdown && (
               <div className="profile-dropdown">
-                <Link to="/profile" className="dropdown-item">Profile</Link>
+                <ProfilePictureUpload 
+                  currentPic={profilePic} 
+                  onUpdate={updateProfilePic}
+                  compactMode={true}
+                />
+                <Link to="/profile" className="dropdown-item">My Profile</Link>
                 <Link to="/settings" className="dropdown-item">Settings</Link>
                 <button onClick={handleSignOut} className="dropdown-item sign-out-btn">
                   Sign Out

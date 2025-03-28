@@ -15,6 +15,7 @@ import './App.css';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [profilePic, setProfilePic] = useState(null);
   const [loading, setLoading] = useState(true);
   const [dailyGoals, setDailyGoals] = useState(() => {
     const savedGoals = localStorage.getItem('dailyGoals');
@@ -28,12 +29,27 @@ function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      setLoading(true);
+      if (currentUser) {
+        setUser(currentUser);
+        // Load saved profile pic from localStorage
+        const savedPic = localStorage.getItem(`profilePic_${currentUser.uid}`);
+        if (savedPic) {
+          setProfilePic(savedPic);
+        } else if (currentUser.photoURL) {
+          // Use Firebase auth photoURL if available
+          setProfilePic(currentUser.photoURL);
+        }
+      } else {
+        setUser(null);
+        setProfilePic(null);
+      }
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
+
 
   if (loading) {
     return <div className="loading-screen">Loading...</div>;
@@ -41,7 +57,10 @@ function App() {
 
   return (
     <Router>
-      <Header user={user} />
+      <Header user={user}
+      profilePic={profilePic}
+      updateProfilePic={setProfilePic} 
+       />
       <Routes>
         <Route path="/" element={<LandingPage user={user} />} />
         <Route 

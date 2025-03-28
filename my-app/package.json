@@ -2,6 +2,7 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:5001",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -9,8 +10,12 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.8.3",
     "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
     "firebase": "^11.5.0",
     "jsonwebtoken": "^9.0.2",
+    "nodemon": "^3.0.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.3.0",
@@ -18,10 +23,18 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "check-api-limit": "curl -I \"https://api.spoonacular.com/recipes/complexSearch?apiKey=92f7abf67e7b49f0a04d4a265bccba27&query=test\"",
     "start": "react-scripts start",
+    "start-server": "cd server && node app.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "nodemon server/server.js",
+    "client": "npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   },
   "eslintConfig": {
     "extends": [

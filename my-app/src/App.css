@@ -314,6 +314,90 @@ body {
   color: #666;
 }
 
+/* Upload Button Styles */
+.upload-btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #3498db;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.upload-btn:hover {
+  background-color: #2980b9;
+}
+
+.upload-btn-compact {
+  display: block;
+  padding: 0.5rem;
+  color: #3498db;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.upload-btn-compact:hover {
+  background-color: #f5f5f5;
+}
+
+.uploading-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Profile Picture Preview */
+.pic-preview {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pic-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.default-pic {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #555;
+}
+
+.compact .pic-preview {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+}
+
+.compact .default-pic {
+  font-size: 1rem;
+}
+
 /* Personal Details Goals Display */
 .calculated-goals {
   background: #f8f9fa;

@@ -4,36 +4,38 @@ import axios from 'axios';
 import '../App.css';
 
 function RecipeDetails() {
-  const { id } = useParams(); // Get recipe ID from URL
+  const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showIngredients, setShowIngredients] = useState(false);
   const [showRecipe, setShowRecipe] = useState(false);
-  const API_KEY = '92f7abf67e7b49f0a04d4a265bccba27'; // Replace with your key
 
   useEffect(() => {
     const fetchRecipeDetails = async () => {
       try {
-        const response = await axios.get(
-          `https://api.spoonacular.com/recipes/${id}/information`,
-          {
-            params: {
-              apiKey: API_KEY,
-              includeNutrition: true
-            }
-          }
-        );
+        console.log(`Fetching details for recipe ID: ${id}`);
+        const response = await axios.get(`/api/recipes/${id}`);
+        console.log('API Response:', response.data);
+        
+        if (!response.data) {
+          throw new Error('Empty response from server');
+        }
         
         setRecipe(response.data);
       } catch (err) {
-        setError('Failed to load recipe details');
-        console.error('Error fetching recipe:', err);
+        console.error('Full error details:', {
+          message: err.message,
+          status: err.response?.status,
+          data: err.response?.data,
+          url: err.config?.url
+        });
+        setError(`Failed to load: ${err.response?.data?.message || err.message}`);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchRecipeDetails();
   }, [id]);
 
