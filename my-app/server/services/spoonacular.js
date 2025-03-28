@@ -1,6 +1,6 @@
 const axios = require('axios');
 const API_KEY = process.env.SPOONACULAR_API_KEY;
-const BASE_URL = 'https://api.spoonacular.com/recipes';
+const BASE_URL = 'https://api.spoonacular.com';
 
 // Get multiple recipes
 const getRecipes = async ({ filter, searchQuery, selectedCuisine, number }) => {
@@ -38,13 +38,20 @@ const getRecipes = async ({ filter, searchQuery, selectedCuisine, number }) => {
         params.diet = 'balanced';
     }
 
-    const response = await axios.get(`${BASE_URL}/complexSearch`, { params });
+    const response = await axios.get(`${BASE_URL}/recipes/complexSearch`, { 
+      params,
+      timeout: 10000 // 10 second timeout
+    });
 
-return response.data.results.map(recipe => ({
+    if (!response.data?.results) {
+      throw new Error('Invalid response format from Spoonacular');
+    }
+
+    return response.data.results.map(recipe => ({
       id: recipe.id,
       name: recipe.title,
       image: recipe.image,
-      nutrition: {  // Ensure consistent structure
+      nutrition: {
         nutrients: recipe.nutrition?.nutrients || [
           { name: 'Calories', amount: 0 },
           { name: 'Protein', amount: 0 },
@@ -53,19 +60,29 @@ return response.data.results.map(recipe => ({
       }
     }));
   } catch (error) {
-    console.error('Error fetching recipes:', error);
-    throw error;
+    console.error('Error fetching recipes:', {
+      message: error.message,
+      status: error.response?.status,
+      data: error.response?.data,
+      config: error.config
+    });
+    throw new Error('Failed to fetch recipes');
   }
 };
 
+// Get detailed recipe information
 const getRecipeDetails = async (id) => {
   try {
-    console.log(`Calling Spoonacular API for recipe ${id}`);
-    const response = await axios.get(`${BASE_URL}/${id}/information`, {
+    if (!id || isNaN(id)) {
+      throw new Error('Invalid recipe ID');
+    }
+
+    const response = await axios.get(`${BASE_URL}/recipes/${id}/information`, {
       params: {
-        apiKey: process.env.SPOONACULAR_API_KEY,
+        apiKey: API_KEY,
         includeNutrition: true
-      }
+      },
+      timeout: 10000
     });
     
     if (!response.data) {
@@ -74,16 +91,119 @@ const getRecipeDetails = async (id) => {
     
     return response.data;
   } catch (error) {
-    console.error('Spoonacular API Error:', {
+    console.error('Recipe details API Error:', {
       status: error.response?.status,
       data: error.response?.data,
-      message: error.message
+      message: error.message,
+      config: error.config
+    });
+    throw new Error('Failed to get recipe details');
+  }
+};
+
+// Search for food ingredients
+const searchFood = async (query, number = 1) => {
+  try {
+    if (!query || typeof query !== 'string') {
+      throw new Error('Invalid search query');
+    }
+
+    const response = await axios.get(`${BASE_URL}/food/ingredients/search`, {
+      params: {
+        apiKey: API_KEY,
+        query: query.trim(),
+        number: Math.min(number, 5) // Limit to 5 results max
+      },
+      timeout: 8000
+    });
+
+    if (!response.data?.results) {
+      return [];
+    }
+
+    return response.data.results.map(item => ({
+      id: item.id,
+      name: item.name,
+      image: `https://spoonacular.com/cdn/ingredients_100x100/${item.image}`
+    }));
+  } catch (error) {
+    console.error('Food search API error:', {
+      message: error.message,
+      status: error.response?.status,
+      data: error.response?.data,
+      config: error.config
+    });
+    throw new Error('Failed to search food ingredients');
+  }
+};
+
+// Get nutrition data for specific food ingredient
+const getFoodNutrition = async (id, amount, unit) => {
+  try {
+    if (!id || isNaN(id)) {
+      throw new Error('Invalid food ID');
+    }
+
+    if (!amount || isNaN(amount)) {
+      throw new Error('Amount must be a number');
+    }
+
+    // Normalize unit values
+    const normalizedUnit = unit.toLowerCase().replace(/s$/, '');
+    const validUnits = ['gram', 'ounce', 'cup', 'tablespoon', 'teaspoon', 'piece', 'ml', 'liter'];
+    
+    if (!validUnits.includes(normalizedUnit)) {
+      throw new Error(`Invalid unit. Valid units are: ${validUnits.join(', ')}`);
+    }
+
+    const response = await axios.get(
+      `${BASE_URL}/food/ingredients/${id}/information`,
+      {
+        params: {
+          apiKey: API_KEY,
+          amount: parseFloat(amount),
+          unit: normalizedUnit
+        },
+        timeout: 8000
+      }
+    );
+
+    if (!response.data?.nutrition) {
+      throw new Error('Invalid nutrition data format');
+    }
+
+    // Standardize the nutrition data structure
+    return {
+      id: response.data.id,
+      name: response.data.name,
+      image: response.data.image,
+      nutrition: {
+        nutrients: response.data.nutrition.nutrients.map(nutrient => ({
+          name: nutrient.name,
+          amount: nutrient.amount,
+          unit: nutrient.unit
+        })),
+        properties: response.data.nutrition.properties || [],
+        caloricBreakdown: response.data.nutrition.caloricBreakdown || {}
+      }
+    };
+  } catch (error) {
+    console.error('Nutrition API Error:', {
+      message: error.message,
+      status: error.response?.status,
+      data: error.response?.data,
+      config: error.config
     });
     throw error;
   }
 };
 
 module.exports = {
+  // Recipe services
   getRecipes,
-  getRecipeDetails
+  getRecipeDetails,
+
+  // Tracker services
+  searchFood,
+  getFoodNutrition
 };

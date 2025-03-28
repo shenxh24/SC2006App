@@ -14,8 +14,15 @@ app.use('/api', apiRouter);
 
 // Error handling
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
+  console.error('Server Error:', {
+    message: err.message,
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+    originalError: err
+  });
+  res.status(500).json({
+    error: 'Something went wrong',
+    ...(process.env.NODE_ENV === 'development' && { details: err.message })
+  });
 });
 
 const PORT = process.env.PORT || 5001;

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import '../App.css';
 
-function Tracker({ dailyGoals: initialDailyGoals = null }) {  // Add default prop value
+function Tracker({ dailyGoals: initialDailyGoals = null }) {
   const [foodItems, setFoodItems] = useState([]);
   const [foodName, setFoodName] = useState('');
   const [amount, setAmount] = useState('');
@@ -12,13 +12,12 @@ function Tracker({ dailyGoals: initialDailyGoals = null }) {  // Add default pro
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   
-  // Use the passed dailyGoals or fallback to defaults
+  // Initialize daily goals
   const [dailyGoals, setDailyGoals] = useState(() => {
-    // Check localStorage first, then props, then use defaults
     const savedGoals = localStorage.getItem('dailyGoals');
     return savedGoals 
       ? JSON.parse(savedGoals)
-      : (initialDailyGoals || {  // Use the prop if available
+      : (initialDailyGoals || {
           calories: 2000,
           protein: 50,
           fat: 65,
@@ -26,26 +25,20 @@ function Tracker({ dailyGoals: initialDailyGoals = null }) {  // Add default pro
         });
   });
 
-  // Spoonacular API key
-  const API_KEY = '92f7abf67e7b49f0a04d4a265bccba27';
-
   // Load saved items from localStorage
   useEffect(() => {
     const savedItems = localStorage.getItem('foodItems');
-    if (savedItems) {
-      setFoodItems(JSON.parse(savedItems));
-    }
-
+    if (savedItems) setFoodItems(JSON.parse(savedItems));
+    
     const savedGoals = localStorage.getItem('dailyGoals');
-    if (savedGoals) {
-      setDailyGoals(JSON.parse(savedGoals));
-    }
+    if (savedGoals) setDailyGoals(JSON.parse(savedGoals));
   }, []);
 
-  // Save items to localStorage when they change
+  // Save to localStorage when changes occur
   useEffect(() => {
     localStorage.setItem('foodItems', JSON.stringify(foodItems));
   }, [foodItems]);
+
   useEffect(() => {
     if (initialDailyGoals) {
       setDailyGoals(initialDailyGoals);
@@ -64,45 +57,38 @@ function Tracker({ dailyGoals: initialDailyGoals = null }) {  // Add default pro
     setError(null);
 
     try {
-      // Step 1: Search for the food to get its ID
-      const searchResponse = await axios.get(
-        'https://api.spoonacular.com/food/ingredients/search',
-        {
-          params: {
-            apiKey: API_KEY,
-            query: foodName,
-            number: 1
-          }
+      // 1. Search for food via backend
+      const searchResponse = await axios.get('/api/food/search', {
+        params: {
+          query: foodName,
+          number: 1
         }
-      );
+      });
 
-      if (!searchResponse.data.results || searchResponse.data.results.length === 0) {
+      if (!searchResponse.data || searchResponse.data.length === 0) {
         throw new Error('Food not found. Try a different name.');
       }
 
-      const foodId = searchResponse.data.results[0].id;
-      const foodNameFromAPI = searchResponse.data.results[0].name;
+      const foodId = searchResponse.data[0].id;
+      const foodNameFromAPI = searchResponse.data[0].name;
 
-      // Step 2: Get nutrition data for the specific food
-      const nutritionResponse = await axios.get(
-        `https://api.spoonacular.com/food/ingredients/${foodId}/information`,
-        {
-          params: {
-            apiKey: API_KEY,
-            amount: amount,
-            unit: unit
-          }
+      // 2. Get nutrition data via backend
+      const nutritionResponse = await axios.get(`/api/food/${foodId}/nutrition`, {
+        params: {
+          amount,
+          unit
         }
-      );
+      });
 
       const nutrients = nutritionResponse.data.nutrition.nutrients;
       
-      // Extract specific nutrients
+      // Helper to extract nutrient values
       const getNutrientValue = (name) => {
         const nutrient = nutrients.find(n => n.name.toLowerCase() === name.toLowerCase());
         return nutrient ? nutrient.amount : 0;
       };
 
+      // Create new food item
       const newFoodItem = {
         id: Date.now(),
         foodName: foodNameFromAPI,
@@ -115,40 +101,58 @@ function Tracker({ dailyGoals: initialDailyGoals = null }) {  // Add default pro
         date: new Date().toISOString().split('T')[0]
       };
 
-      setFoodItems(prevItems => [...prevItems, newFoodItem]);
+      setFoodItems(prev => [...prev, newFoodItem]);
       setFoodName('');
       setAmount('');
       setUnit('grams');
       setLessOilSalt(false);
 
     } catch (err) {
-      setError(err.message || 'Failed to fetch nutrition data. Please try again.');
-      console.error('API Error:', err);
+      let errorMessage = 'Failed to add food';
+      
+      if (err.response) {
+        // Backend returned an error response
+        errorMessage = err.response.data?.error || 
+                      err.response.data?.message || 
+                      `Server error (${err.response.status})`;
+      } else if (err.request) {
+        // No response received
+        errorMessage = 'No response from server';
+      } else {
+        // Other errors
+        errorMessage = err.message;
+      }
+  
+      setError(errorMessage);
+      console.error('Full error:', {
+        message: err.message,
+        response: err.response?.data,
+        request: err.config
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleRemoveFood = (id) => {
-    setFoodItems(prevItems => prevItems.filter(item => item.id !== id));
+    setFoodItems(prev => prev.filter(item => item.id !== id));
   };
 
   // Calculate totals
-  const totals = foodItems.reduce((acc, item) => {
-    acc.calories += item.calories || 0;
-    acc.protein += item.protein || 0;
-    acc.fat += item.fat || 0;
-    acc.carbs += item.carbs || 0;
-    return acc;
-  }, { calories: 0, protein: 0, fat: 0, carbs: 0 });
+  const totals = foodItems.reduce((acc, item) => ({
+    calories: acc.calories + (item.calories || 0),
+    protein: acc.protein + (item.protein || 0),
+    fat: acc.fat + (item.fat || 0),
+    carbs: acc.carbs + (item.carbs || 0)
+  }), { calories: 0, protein: 0, fat: 0, carbs: 0 });
 
   // Calculate progress percentages
-  const progress = {
-    calories: Math.min((totals.calories / dailyGoals.calories) * 100, 100),
-    protein: Math.min((totals.protein / dailyGoals.protein) * 100, 100),
-    fat: Math.min((totals.fat / dailyGoals.fat) * 100, 100),
-    carbs: Math.min((totals.carbs / dailyGoals.carbs) * 100, 100)
-  };
+  const progress = Object.fromEntries(
+    Object.entries(totals).map(([key, value]) => [
+      key,
+      Math.min((value / dailyGoals[key]) * 100, 100)
+    ])
+  );
 
   return (
     <div className="tracker">
@@ -243,7 +247,7 @@ function Tracker({ dailyGoals: initialDailyGoals = null }) {  // Add default pro
                   <span>{item.calories.toFixed(0)} kcal</span>
                   <span>Protein: {item.protein.toFixed(1)}g</span>
                   <span>Fats: {item.fat.toFixed(1)}g</span>
-                  <span>Carbohydrates: {item.carbs.toFixed(1)}g</span>
+                  <span>Carbs: {item.carbs.toFixed(1)}g</span>
                 </div>
                 {item.lessOilSalt && <span className="tag">Low oil/salt</span>}
               </div>
