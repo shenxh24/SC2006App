@@ -6,25 +6,25 @@ const features = [
   {
     id: 1,
     logo: <img src="/Tracker.jpeg" alt="Tracker" />, // Image logo
-    description: 'Enter what you have consumed in the day and know how much calories/nutrients intake you have.',
+    description: 'What have you eaten today?',
     path: '/tracker',
   },
   {
     id: 2,
     logo: <img src="/Recipe.jpeg" alt="Recipe" />, // Image logo
-    description: 'Enter the expiry dates of the food you have in your fridge and get personalized recipes.',
+    description: 'Sick and tired of eating out?.',
     path: '/recipes',
   },
   {
     id: 3,
     logo: <img src="/HawkerCentres.jpeg" alt="Hawker Centres" />, // Image logo
-    description: 'Use your live location to access nearby food centres.',
+    description: 'Find the nearest hawker!',
     path: '/hawker-centres',
   },
   {
     id: 4,
     logo: <img src="/PersonalDetails.jpeg" alt="PersonalDetails" />, // Image logo
-    description: 'Enter your height, age, and other details for personalized recipes and diet plans.',
+    description: 'Get personalized diet plans here!',
     path: '/personal-details',
   },
 ];
