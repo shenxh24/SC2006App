@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { FavouritesContext } from './FavouritesContext';
 import axios from 'axios';
 import '../App.css';
 
@@ -10,6 +11,10 @@ function RecipeDetails() {
   const [error, setError] = useState(null);
   const [showIngredients, setShowIngredients] = useState(false);
   const [showRecipe, setShowRecipe] = useState(false);
+  
+
+  const {addfavourite, removefavourite, isfavourite } = useContext(FavouritesContext);
+  const [isfavourited, setIsfavourited] = useState(false);
 
   useEffect(() => {
     const fetchRecipeDetails = async () => {
@@ -23,6 +28,8 @@ function RecipeDetails() {
         }
         
         setRecipe(response.data);
+        // Check if this recipe is already favourited
+        setIsfavourited(isfavourite(response.data.id));
       } catch (err) {
         console.error('Full error details:', {
           message: err.message,
@@ -37,7 +44,16 @@ function RecipeDetails() {
     };
   
     fetchRecipeDetails();
-  }, [id]);
+  }, [id, isfavourite]);
+
+  const handlefavouriteClick = () => {
+    if (isfavourited) {
+      removefavourite(recipe.id);
+    } else {
+      addfavourite(recipe);
+    }
+    setIsfavourited(!isfavourited);
+  };
 
   if (loading) return <div className="loading">Loading recipe details...</div>;
   if (error) return <div className="error">{error}</div>;
@@ -60,6 +76,14 @@ function RecipeDetails() {
         <p>Ready in: {recipe.readyInMinutes} minutes</p>
         <p>Servings: {recipe.servings}</p>
       </div>
+
+      {/* favourite Button */}
+      <button 
+        onClick={handlefavouriteClick}
+        className={`favourite-btn ${isfavourited ? 'active' : ''}`}
+      >
+        {isfavourited ? '❤️ Remove from Favourites' : '♡ Add to Favourites'}
+      </button>
 
       {/* Toggle Ingredients */}
       <button 

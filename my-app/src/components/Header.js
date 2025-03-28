@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
-import ProfilePictureUpload from './ProfilePictureUpload';
 import '../App.css';
 
 function Header({ user, profilePic, updateProfilePic }) {
@@ -24,10 +23,10 @@ function Header({ user, profilePic, updateProfilePic }) {
         <Link to="/" className="logo-link">BitebyByte</Link>
       </div>
       <nav className="nav">
-        <Link to="/personal-details" className="nav-link">Personal Details</Link>
         <Link to="/recipes" className="nav-link">Recipes</Link>
         <Link to="/tracker" className="nav-link">Tracker</Link>
         <Link to="/hawker-centres" className="nav-link">Hawker Centres</Link>
+        <Link to="/favourites" className="nav-link">Favourites</Link>
         
         {user ? (
           <div 
@@ -52,11 +51,6 @@ function Header({ user, profilePic, updateProfilePic }) {
             
             {showDropdown && (
               <div className="profile-dropdown">
-                <ProfilePictureUpload 
-                  currentPic={profilePic} 
-                  onUpdate={updateProfilePic}
-                  compactMode={true}
-                />
                 <Link to="/profile" className="dropdown-item">My Profile</Link>
                 <Link to="/settings" className="dropdown-item">Settings</Link>
                 <button onClick={handleSignOut} className="dropdown-item sign-out-btn">

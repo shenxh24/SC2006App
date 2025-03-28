@@ -11,6 +11,9 @@ import HawkerCentres from './components/HawkerCentres';
 import AuthForm from './SignIn/AuthForm';
 import ReviewsPage from './components/ReviewsPage';
 import Header from './components/Header';
+import ProfilePage from './components/ProfilePage';
+import FavouritesPage from './components/FavouritesPage';
+import { FavouritesProvider } from './components/FavouritesContext';
 import './App.css';
 
 function App() {
@@ -32,12 +35,10 @@ function App() {
       setLoading(true);
       if (currentUser) {
         setUser(currentUser);
-        // Load saved profile pic from localStorage
         const savedPic = localStorage.getItem(`profilePic_${currentUser.uid}`);
         if (savedPic) {
           setProfilePic(savedPic);
         } else if (currentUser.photoURL) {
-          // Use Firebase auth photoURL if available
           setProfilePic(currentUser.photoURL);
         }
       } else {
@@ -50,44 +51,57 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-
   if (loading) {
     return <div className="loading-screen">Loading...</div>;
   }
 
   return (
-    <Router>
-      <Header user={user}
-      profilePic={profilePic}
-      updateProfilePic={setProfilePic} 
-       />
-      <Routes>
-        <Route path="/" element={<LandingPage user={user} />} />
-        <Route 
-          path="/personal-details" 
-          element={
-            <PersonalDetails 
-              user={user} 
-              setDailyGoals={setDailyGoals} 
-            />
-          } 
+    <FavouritesProvider>
+      <Router>
+        <Header 
+          user={user}
+          profilePic={profilePic}
+          updateProfilePic={setProfilePic} 
         />
-        <Route 
-          path="/tracker" 
-          element={
-            <Tracker 
-              user={user} 
-              dailyGoals={dailyGoals} 
-            />
-          } 
-        />
-        <Route path="/recipes" element={<RecipesOverview user={user} />} />
-        <Route path="/recipe/:id" element={<RecipeDetails user={user} />} />
-        <Route path="/hawker-centres" element={<HawkerCentres user={user} />} />
-        <Route path="/signin" element={<AuthForm />} />
-        <Route path="/reviews-page" element={<ReviewsPage user={user} />} />
-      </Routes>
-    </Router>
+        <Routes>
+          <Route path="/" element={<LandingPage user={user} />} />
+          <Route 
+            path="/personal-details" 
+            element={
+              <PersonalDetails 
+                user={user} 
+                setDailyGoals={setDailyGoals} 
+              />
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <ProfilePage 
+                user={user}
+                profilePic={profilePic}
+                updateProfilePic={setProfilePic}
+              />
+            } 
+          />
+          <Route 
+            path="/tracker" 
+            element={
+              <Tracker 
+                user={user} 
+                dailyGoals={dailyGoals} 
+              />
+            } 
+          />
+          <Route path="/recipes" element={<RecipesOverview user={user} />} />
+          <Route path="/recipe/:id" element={<RecipeDetails user={user} />} />
+          <Route path="/hawker-centres" element={<HawkerCentres user={user} />} />
+          <Route path="/signin" element={<AuthForm />} />
+          <Route path="/reviews-page" element={<ReviewsPage user={user} />} />
+          <Route path="/favourites" element={<FavouritesPage user={user} />} />
+        </Routes>
+      </Router>
+    </FavouritesProvider>
   );
 }
 

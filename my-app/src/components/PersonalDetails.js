@@ -1,202 +1,234 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState} from 'react';
+import { Link } from 'react-router-dom';
 import '../App.css';
 
-function PersonalDetails({ user, setDailyGoals }) {
-  const [height, setHeight] = useState('');
-  const [weight, setWeight] = useState('');
-  const [lifestyle, setLifestyle] = useState('');
-  const [gender, setGender] = useState('');
-  const [age, setAge] = useState('');
-  const [calculatedGoals, setCalculatedGoals] = useState(null);
-  const navigate = useNavigate();
+const PersonalDetails = ({ user, setDailyGoals }) => {
+  // Initialize state with localStorage data or defaults
+  const [formData, setFormData] = useState(() => {
+    const savedData = localStorage.getItem('personalDetails');
+    return savedData ? JSON.parse(savedData) : {
+      age: '',
+      height: '',
+      weight: '',
+      gender: '',
+      activityLevel: '',
+      dietaryPreferences: [],
+      calorieGoal: 2000,
+      proteinGoal: 50,
+      fatGoal: 65,
+      carbGoal: 300
+    };
+  });
 
-  // Load saved details from local storage
-  useEffect(() => {
-    const savedDetails = JSON.parse(localStorage.getItem('personalDetails'));
-    if (savedDetails) {
-      setHeight(savedDetails.height);
-      setWeight(savedDetails.weight);
-      setLifestyle(savedDetails.lifestyle);
-      setGender(savedDetails.gender);
-      setAge(savedDetails.age);
-    }
-  }, []);
+  const activityLevels = [
+    'Sedentary (little or no exercise)',
+    'Lightly active (light exercise 1-3 days/week)',
+    'Moderately active (moderate exercise 3-5 days/week)',
+    'Very active (hard exercise 6-7 days/week)',
+    'Extremely active (very hard exercise & physical job)'
+  ];
 
-  const calculateGoals = () => {
-    if (!height || !weight || !lifestyle || !gender || !age) return;
-
-    // Basic BMR calculation (Harris-Benedict equation)
-    let bmr;
-    if (gender === 'male') {
-      bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
-    } else {
-      bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
-    }
-
-    // Adjust for activity level
-    let activityMultiplier;
-    switch(lifestyle) {
-      case 'sedentary': activityMultiplier = 1.2; break;
-      case 'active': activityMultiplier = 1.55; break;
-      case 'very-active': activityMultiplier = 1.9; break;
-      default: activityMultiplier = 1.2;
-    }
-
-    const calories = Math.round(bmr * activityMultiplier);
-    
-    // Macronutrient distribution (40% carbs, 30% protein, 30% fat)
-    const protein = Math.round((calories * 0.3) / 4);
-    const fat = Math.round((calories * 0.3) / 9);
-    const carbs = Math.round((calories * 0.4) / 4);
-
-    const goals = { calories, protein, fat, carbs };
-    setCalculatedGoals(goals);
-    return goals;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSave = (e) => {
     e.preventDefault();
-    const personalDetails = { height, weight, lifestyle, gender, age };
-    localStorage.setItem('personalDetails', JSON.stringify(personalDetails));
     
-    const goals = calculateGoals();
-    if (goals) {
-      setDailyGoals(goals);
-      localStorage.setItem('dailyGoals', JSON.stringify(goals));
-      setCalculatedGoals(goals); // Make sure this is set
-      alert('Details and goals saved successfully!');
+    // Save to localStorage
+    localStorage.setItem('personalDetails', JSON.stringify(formData));
+    
+    // Update daily goals if they've changed
+    setDailyGoals({
+      calories: Number(formData.calorieGoal),
+      protein: Number(formData.proteinGoal),
+      fat: Number(formData.fatGoal),
+      carbs: Number(formData.carbGoal)
+    });
+    
+    alert('Personal details saved successfully!');
+  };
+
+  const calculateGoals = () => {
+    // Basic Harris-Benedict equation for demonstration
+    if (!formData.weight || !formData.height || !formData.age) return;
+    
+    const weightKg = parseFloat(formData.weight);
+    const heightCm = parseFloat(formData.height);
+    const age = parseInt(formData.age);
+    
+    let bmr;
+    if (formData.gender === 'male') {
+      bmr = 88.362 + (13.397 * weightKg) + (4.799 * heightCm) - (5.677 * age);
+    } else {
+      bmr = 447.593 + (9.247 * weightKg) + (3.098 * heightCm) - (4.330 * age);
     }
+    
+    // Apply activity multiplier
+    const activityMultipliers = [1.2, 1.375, 1.55, 1.725, 1.9];
+    const activityIndex = activityLevels.indexOf(formData.activityLevel);
+    const tdee = bmr * (activityMultipliers[activityIndex] || 1.2);
+    
+    // Update form data with calculated goals
+    setFormData(prev => ({
+      ...prev,
+      calorieGoal: Math.round(tdee),
+      proteinGoal: Math.round(weightKg * 1.8), // 1.8g per kg of body weight
+      fatGoal: Math.round((tdee * 0.25) / 9), // 25% of calories from fat
+      carbGoal: Math.round((tdee * 0.5) / 4) // 50% of calories from carbs
+    }));
   };
 
   return (
-    <div className="personal-details">
-      <h1>BitebyByte</h1>
-      <h2>Personal Details</h2>
-      <p>Enter your details to calculate personalized daily nutrition goals</p>
-
-      <form onSubmit={handleSubmit} className="details-form">
-        <div className="form-group">
-          <label>
-            Height (cm):
-            <input
-              type="number"
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-              placeholder="Enter height"
-              min="100"
-              max="250"
-              required
-            />
-          </label>
+    <div className="personal-details-container">
+      <h1>Personal Details</h1>
+      
+      <form onSubmit={handleSave} className="details-form">
+        <div className="form-section">
+          <h2>Basic Information</h2>
+          <div className="form-row">
+            <div className="form-group">
+              <label>Age</label>
+              <input
+                type="number"
+                name="age"
+                value={formData.age}
+                onChange={handleChange}
+                min="10"
+                max="120"
+              />
+            </div>
+            <div className="form-group">
+              <label>Height (cm)</label>
+              <input
+                type="number"
+                name="height"
+                value={formData.height}
+                onChange={handleChange}
+                min="100"
+                max="250"
+              />
+            </div>
+            <div className="form-group">
+              <label>Weight (kg)</label>
+              <input
+                type="number"
+                name="weight"
+                value={formData.weight}
+                onChange={handleChange}
+                min="30"
+                max="300"
+                step="0.1"
+              />
+            </div>
+          </div>
+          
+          <div className="form-row">
+            <div className="form-group">
+              <label>Gender</label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+              >
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Activity Level</label>
+              <select
+                name="activityLevel"
+                value={formData.activityLevel}
+                onChange={handleChange}
+              >
+                <option value="">Select</option>
+                {activityLevels.map((level, index) => (
+                  <option key={index} value={level}>{level}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          
+          <button 
+            type="button" 
+            className="calculate-btn"
+            onClick={calculateGoals}
+            disabled={!formData.weight || !formData.height || !formData.age || !formData.gender}
+          >
+            Calculate Recommended Goals
+          </button>
         </div>
 
-        <div className="form-group">
-          <label>
-            Weight (kg):
-            <input
-              type="number"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
-              placeholder="Enter weight"
-              min="30"
-              max="200"
-              required
-            />
-          </label>
+        <div className="form-section">
+          <h2>Nutrition Goals</h2>
+          <div className="form-row">
+            <div className="form-group">
+              <label>Calories (kcal)</label>
+              <input
+                type="number"
+                name="calorieGoal"
+                value={formData.calorieGoal}
+                onChange={handleChange}
+                min="1000"
+                max="10000"
+              />
+            </div>
+            <div className="form-group">
+              <label>Protein (g)</label>
+              <input
+                type="number"
+                name="proteinGoal"
+                value={formData.proteinGoal}
+                onChange={handleChange}
+                min="20"
+                max="500"
+              />
+            </div>
+          </div>
+          <div className="form-row">
+            <div className="form-group">
+              <label>Fat (g)</label>
+              <input
+                type="number"
+                name="fatGoal"
+                value={formData.fatGoal}
+                onChange={handleChange}
+                min="20"
+                max="300"
+              />
+            </div>
+            <div className="form-group">
+              <label>Carbs (g)</label>
+              <input
+                type="number"
+                name="carbGoal"
+                value={formData.carbGoal}
+                onChange={handleChange}
+                min="50"
+                max="800"
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="form-group">
-          <label>
-            Gender:
-            <select
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-              required
-            >
-              <option value="">Select gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other (uses female formula)</option>
-            </select>
-          </label>
+        <div className="form-actions">
+          <Link to="/profile" className="cancel-btn">
+            Back to Profile
+          </Link>
+          <button type="submit" className="save-btn">
+            Save Changes
+          </button>
         </div>
-
-        <div className="form-group">
-          <label>
-            Age:
-            <input
-              type="number"
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-              placeholder="Enter age"
-              min="13"
-              max="120"
-              required
-            />
-          </label>
-        </div>
-
-        <div className="form-group">
-          <label>
-            Lifestyle:
-            <select
-              value={lifestyle}
-              onChange={(e) => setLifestyle(e.target.value)}
-              required
-            >
-              <option value="">Select activity level</option>
-              <option value="sedentary">Sedentary (little or no exercise)</option>
-              <option value="active">Active (moderate exercise 3-5 days/week)</option>
-              <option value="very-active">Very Active (intense exercise 6-7 days/week)</option>
-            </select>
-          </label>
-        </div>
-
-        <button type="submit" className="save-button">
-          Calculate & Save Goals
-        </button>
       </form>
-
-      {calculatedGoals && (
-  <div className="calculated-goals">
-    <h3>Your Recommended Daily Goals</h3>
-    <div className="goals-grid">
-      <div className="goal-item">
-        <span className="goal-value">{calculatedGoals.calories}</span>
-        <span className="goal-label">Calories (kcal)</span>
-      </div>
-      <div className="goal-item">
-        <span className="goal-value">{calculatedGoals.protein}g</span>
-        <span className="goal-label">Protein</span>
-      </div>
-      <div className="goal-item">
-        <span className="goal-value">{calculatedGoals.fat}g</span>
-        <span className="goal-label">Fat</span>
-      </div>
-      <div className="goal-item">
-        <span className="goal-value">{calculatedGoals.carbs}g</span>
-        <span className="goal-label">Carbs</span>
-      </div>
-    </div>
-    <p className="goals-explanation">
-      Based on your {age}-year-old {gender} profile at {height}cm and {weight}kg 
-      with a {lifestyle.replace('-', ' ')} lifestyle.
-    </p>
-    <button 
-      onClick={() => navigate('/tracker')} 
-      className="tracker-button"
-    >
-      Start Tracking Now
-    </button>
-  </div>
-)}
-
-      <footer className="footer">
-        <p>&copy; {new Date().getFullYear()} BitebyByte. All rights reserved.</p>
-      </footer>
     </div>
   );
-}
+};
 
 export default PersonalDetails;
