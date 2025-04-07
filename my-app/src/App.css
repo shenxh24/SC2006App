@@ -203,6 +203,168 @@ body {
   }
 }
 
+/* AuthForm.css */
+
+.auth-container {
+  max-width: 420px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  background: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.auth-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.auth-form label {
+  font-weight: 500;
+  color: #34495e;
+  margin-bottom: -0.8rem;
+}
+
+.auth-form input {
+  padding: 0.8rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.auth-form input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.auth-form button[type="submit"] {
+  background: linear-gradient(135deg, #3498db, #2c3e50);
+  color: white;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.auth-form button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.toggle-auth {
+  background: none;
+  border: none;
+  color: #3498db;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: center;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.toggle-auth:hover {
+  color: #2980b9;
+  text-decoration: underline;
+}
+
+.social-auth {
+  margin-top: 2rem;
+  text-align: center;
+  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+}
+
+.social-auth h3 {
+  color: #7f8c8d;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.social-auth h3::before,
+.social-auth h3::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 30%;
+  height: 1px;
+  background: #eee;
+}
+
+.social-auth h3::before {
+  left: 0;
+}
+
+.social-auth h3::after {
+  right: 0;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  background: white;
+  color: #5f6368;
+  padding: 0.8rem 1.5rem;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.google-btn:hover {
+  background: #f7f7f7;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.google-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.error-message {
+  color: #e74c3c;
+  background: #fdecea;
+  padding: 0.8rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  
+  .auth-container h2 {
+    font-size: 1.5rem;
+  }
+}
+
 /* Hero Section */
 .hero {
   padding: 60px 20px;
@@ -703,7 +865,7 @@ body {
 }
 
 .save-button {
-  background-color: #3498db;
+  background-color: #81c784;
   color: white;
   border: none;
   padding: 0.8rem 1.5rem;
@@ -715,7 +877,7 @@ body {
 }
 
 .save-button:hover {
-  background-color: #2980b9;
+  background-color: #81c784;
 }
 
 /* Personal Details Styles */

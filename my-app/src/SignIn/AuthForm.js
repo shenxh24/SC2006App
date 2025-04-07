@@ -48,11 +48,10 @@ const AuthForm = () => {
   };
 
   return (
-    <div>
+    <div className="auth-container">
       <h2>{isLogin ? 'Log In' : 'Sign Up'}</h2>
-
-      {/* Toggle between login and sign-up */}
-      <form onSubmit={isLogin ? handleEmailLogin : handleEmailSignUp}>
+  
+      <form className="auth-form" onSubmit={isLogin ? handleEmailLogin : handleEmailSignUp}>
         <label>Email:</label>
         <input
           type="email"
@@ -69,21 +68,21 @@ const AuthForm = () => {
         />
         <button type="submit">{isLogin ? 'Log In' : 'Sign Up'}</button>
       </form>
-
-      {/* Toggle between login and sign-up */}
-      <button onClick={() => setIsLogin(!isLogin)}>
+  
+      <button className="toggle-auth" onClick={() => setIsLogin(!isLogin)}>
         {isLogin ? 'Need to sign up?' : 'Already have an account?'}
       </button>
-
-      {/* Google Sign-In Button */}
-      <div>
+  
+      <div className="social-auth">
         <h3>Or Sign In with Google</h3>
-        <button onClick={handleGoogleSignIn}>Sign in with Google</button>
+        <button className="google-btn" onClick={handleGoogleSignIn}>
+          <img className="google-icon" src="https://www.google.com/favicon.ico" alt="Google" />
+          Sign in with Google
+        </button>
       </div>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+  
+      {error && <p className="error-message">{error}</p>}
     </div>
-  );
-};
-
+  )
+}
 export default AuthForm;

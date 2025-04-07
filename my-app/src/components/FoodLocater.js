@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import '../FoodLocater.css';
 
 const FoodLocater = ({ user }) => {
   const [map, setMap] = useState(null);
@@ -44,24 +45,8 @@ const FoodLocater = ({ user }) => {
     };
   }, []);
 
-  // Initialize map when Google Maps is loaded
-  useEffect(() => {
-    if (!isGoogleMapsLoaded) return;
-
-    setIsLoading(true);
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        position => initializeMap(position.coords),
-        error => handleGeolocationError(error)
-      );
-    } else {
-      setError("Geolocation is not supported by this browser. Showing default location.");
-      initializeMap({ lat: 40.7128, lng: -74.0060 });
-    }
-  }, [isGoogleMapsLoaded]);
-
   // Initialize the map
-  const initializeMap = (coords) => {
+  const initializeMap = useCallback((coords) => {
     try {
       const location = { lat: coords.latitude || coords.lat, lng: coords.longitude || coords.lng };
       setUserLocation(location);
@@ -95,10 +80,38 @@ const FoodLocater = ({ user }) => {
       setIsLoading(false);
       console.error("Map initialization error:", err);
     }
-  };
+  }, [currentSearchTerm]);
+
+  // Error handlers
+  const handleGeolocationError = useCallback((error) => {
+    const errors = {
+      1: "Permission denied. Using default location.",
+      2: "Position unavailable. Using default location.",
+      3: "Timeout exceeded. Using default location."
+    };
+    
+    showError(errors[error.code] || "Geolocation error. Using default location.");
+    initializeMap({ lat: 40.7128, lng: -74.0060 });
+  }, [initializeMap]);
+
+  // Initialize map when Google Maps is loaded
+  useEffect(() => {
+    if (!isGoogleMapsLoaded) return;
+
+    setIsLoading(true);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => initializeMap(position.coords),
+        error => handleGeolocationError(error)
+      );
+    } else {
+      setError("Geolocation is not supported by this browser. Showing default location.");
+      initializeMap({ lat: 40.7128, lng: -74.0060 });
+    }
+  }, [isGoogleMapsLoaded, initializeMap, handleGeolocationError]);
 
   // Perform nearby search
-  const performNearbySearch = (keyword) => {
+  const performNearbySearch = useCallback((keyword) => {
     if (!service || !userLocation) return;
 
     const selectedPrice = document.getElementById("price-range")?.value;
@@ -130,10 +143,10 @@ const FoodLocater = ({ user }) => {
         handlePlacesError(status);
       }
     });
-  };
+  }, [service, userLocation, currentSearchTerm]);
 
   // Create marker for each place
-  const createMarker = (place) => {
+  const createMarker = useCallback((place) => {
     if (!place.geometry?.location || !map) return;
 
     const marker = new window.google.maps.Marker({
@@ -149,10 +162,10 @@ const FoodLocater = ({ user }) => {
 
     setMarkers(prev => [...prev, marker]);
     setupMarkerInteraction(marker, place);
-  };
+  }, [map]);
 
   // Setup marker click interaction
-  const setupMarkerInteraction = (marker, place) => {
+  const setupMarkerInteraction = useCallback((marker, place) => {
     marker.addListener("click", async () => {
       try {
         const details = await fetchPlaceDetails(place.place_id);
@@ -163,10 +176,10 @@ const FoodLocater = ({ user }) => {
         showError("Failed to load details");
       }
     });
-  };
+  }, [infowindow, map]);
 
   // Fetch place details with caching
-  const fetchPlaceDetails = (placeId) => {
+  const fetchPlaceDetails = useCallback((placeId) => {
     if (placeDetailsCache.current.has(placeId)) {
       return Promise.resolve(placeDetailsCache.current.get(placeId));
     }
@@ -185,10 +198,10 @@ const FoodLocater = ({ user }) => {
         }
       });
     });
-  };
+  }, [service]);
 
   // Create info window content
-  const createInfoWindowContent = (details) => {
+  const createInfoWindowContent = useCallback((details) => {
     const reviewsHTML = details.reviews?.slice(0, 3).map(review => `
       <div class="review">
         <div class="review-header">
@@ -219,10 +232,10 @@ const FoodLocater = ({ user }) => {
         </button>
       </div>
     `;
-  };
+  }, []);
 
   // Get directions to a place
-  const getDirections = (destLat, destLng) => {
+  const getDirections = useCallback((destLat, destLng) => {
     if (!userLocation || !directionsRenderer) {
       showError("Your location is not available.");
       return;
@@ -254,37 +267,13 @@ const FoodLocater = ({ user }) => {
         addBusStopMarkers(result);
 
         const leg = result.routes[0].legs[0];
-        const duration = leg.duration.text;
         const steps = leg.steps;
-
-        const emojiMap = {
-          WALKING: '🚶',
-          DRIVING: '🚗',
-          BICYCLING: '🚴',
-          TRANSIT: '🚌'
-        };
-        const icon = emojiMap[mode] || '🧭';
 
         if (steps && steps.length > 0) {
           const midStep = steps[Math.floor(steps.length / 2)];
           const position = midStep.end_location;
 
           const blackBubble = new window.google.maps.InfoWindow({
-            content: `
-              <div style="
-                background: rgba(0, 0, 0, 0.85);
-                color: #fff;
-                padding: 10px 18px;
-                border-radius: 999px;
-                font-weight: 600;
-                font-size: 15px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                text-align: center;
-                white-space: nowrap;
-              ">
-                ${icon} Estimated travel time: ${duration}
-              </div>
-            `,
             position: position,
             pixelOffset: new window.google.maps.Size(0, -10)
           });
@@ -296,10 +285,10 @@ const FoodLocater = ({ user }) => {
         handleDirectionsError(status);
       }
     });
-  };
+  }, [userLocation, directionsRenderer, map]);
 
   // Add bus stop markers for transit directions
-  const addBusStopMarkers = (result) => {
+  const addBusStopMarkers = useCallback((result) => {
     // Clear previous bus stops
     markers.filter(m => m.getTitle() === 'Bus Stop').forEach(m => m.setMap(null));
     
@@ -323,10 +312,10 @@ const FoodLocater = ({ user }) => {
         }
       });
     });
-  };
+  }, [map, markers]);
 
   // Error handlers
-  const handleDirectionsError = (status) => {
+  const handleDirectionsError = useCallback((status) => {
     const errors = {
       ZERO_RESULTS: "No route found. Try a different transportation mode.",
       NOT_FOUND: "Start or end location not found.",
@@ -342,9 +331,9 @@ const FoodLocater = ({ user }) => {
     };
 
     showError(errors[status] || `Directions failed: ${status}`);
-  };
+  }, []);
 
-  const handlePlacesError = (status) => {
+  const handlePlacesError = useCallback((status) => {
     const errors = {
       OVER_QUERY_LIMIT: "Search quota exceeded. Try again later.",
       ZERO_RESULTS: "No results found. Try a different search term.",
@@ -354,31 +343,20 @@ const FoodLocater = ({ user }) => {
     };
 
     showError(errors[status] || `Search failed: ${status}`);
-  };
-
-  const handleGeolocationError = (error) => {
-    const errors = {
-      1: "Permission denied. Using default location.",
-      2: "Position unavailable. Using default location.",
-      3: "Timeout exceeded. Using default location."
-    };
-    
-    showError(errors[error.code] || "Geolocation error. Using default location.");
-    initializeMap({ lat: 40.7128, lng: -74.0060 });
-  };
+  }, []);
 
   // UI helpers
-  const showError = (message) => {
+  const showError = useCallback((message) => {
     setError(message);
     setTimeout(() => setError(null), 5000);
-  };
+  }, []);
 
-  const clearMarkers = () => {
+  const clearMarkers = useCallback(() => {
     markers.forEach(marker => marker.setMap(null));
     setMarkers([]);
-  };
+  }, [markers]);
 
-  const debouncedSearch = () => {
+  const debouncedSearch = useCallback(() => {
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
@@ -386,10 +364,10 @@ const FoodLocater = ({ user }) => {
       const input = document.getElementById("search-input")?.value.trim();
       performNearbySearch(input);
     }, 300);
-  };
+  }, [performNearbySearch]);
 
   // Setup event listeners
-  const setupEventListeners = () => {
+  const setupEventListeners = useCallback(() => {
     const modeButtons = document.querySelectorAll(".mode-btn");
     if (modeButtons) {
       modeButtons.forEach(btn => {
@@ -414,7 +392,7 @@ const FoodLocater = ({ user }) => {
     if (rating) {
       rating.addEventListener("change", () => performNearbySearch());
     }
-  };
+  }, [debouncedSearch, performNearbySearch]);
 
   // Expose getDirections to window for HTML button click
   useEffect(() => {
@@ -428,7 +406,7 @@ const FoodLocater = ({ user }) => {
       delete window.getDirections;
       delete window.searchNearby;
     };
-  }, [userLocation, directionsRenderer]);
+  }, [getDirections, performNearbySearch]);
 
   return (
     <div className="food-locater-container">
