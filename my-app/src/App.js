@@ -7,7 +7,7 @@ import PersonalDetails from './components/PersonalDetails';
 import RecipesOverview from './components/RecipesOverview';
 import RecipeDetails from './components/RecipeDetails';
 import Tracker from './components/Tracker';
-import HawkerCentres from './components/HawkerCentres';
+import FoodLocater from './components/FoodLocater';
 import AuthForm from './SignIn/AuthForm';
 import ReviewsPage from './components/ReviewsPage';
 import Header from './components/Header';
@@ -15,6 +15,7 @@ import ProfilePage from './components/ProfilePage';
 import FavouritesPage from './components/FavouritesPage';
 import { FavouritesProvider } from './components/FavouritesContext';
 import './App.css';
+import ResetPassword from './SignIn/ResetPassword';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -95,7 +96,7 @@ function App() {
           />
           <Route path="/recipes" element={<RecipesOverview user={user} />} />
           <Route path="/recipe/:id" element={<RecipeDetails user={user} />} />
-          <Route path="/hawker-centres" element={<HawkerCentres user={user} />} />
+          <Route path="/food-locater" element={<FoodLocater user={user} />} />
           <Route path="/signin" element={<AuthForm />} />
           <Route path="/reviews-page" element={<ReviewsPage user={user} />} />
           <Route path="/favourites" element={<FavouritesPage user={user} />} />

@@ -20,10 +20,10 @@ const features = [
   },
   {
     id: 3,
-    logo: <img src="/HawkerCentres.jpeg" alt="Hawker Centres" />,
-    title: "Hawker Centres",
+    logo: <img src="/HawkerCentres.jpeg" alt="Locate the food" />,
+    title: "Locate the food",
     description: 'Find the nearest hawker centers',
-    path: '/hawker-centres',
+    path: '/food-locater',
   },
   {
     id: 4,

@@ -46,9 +46,21 @@ export const getRecipeDetails = async (id) => {
       params: {
         apiKey: API_KEY,
         includeNutrition: true,
-      },
+        addRecipeInformation: true
+      }
     });
-    return response.data;
+    
+    // Process allergens from Spoonacular data
+    const allergens = [];
+    if (response.data.dairyFree === false) allergens.push('dairy');
+    if (response.data.glutenFree === false) allergens.push('gluten');
+    // can add more checks
+    
+    return {
+      ...response.data,
+      allergens,
+      allergenNotes: response.data.warnings?.join(', ') || ''
+    };
   } catch (error) {
     console.error('Error fetching recipe details:', error);
     return null;

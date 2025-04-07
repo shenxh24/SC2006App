@@ -73,31 +73,32 @@ const getRecipes = async ({ filter, searchQuery, selectedCuisine, number }) => {
 // Get detailed recipe information
 const getRecipeDetails = async (id) => {
   try {
-    if (!id || isNaN(id)) {
-      throw new Error('Invalid recipe ID');
-    }
-
     const response = await axios.get(`${BASE_URL}/recipes/${id}/information`, {
       params: {
         apiKey: API_KEY,
-        includeNutrition: true
+        includeNutrition: true,
+        addRecipeInformation: true
       },
       timeout: 10000
     });
     
-    if (!response.data) {
-      throw new Error('Empty response from Spoonacular');
-    }
+    if (!response.data) throw new Error('Empty response');
     
-    return response.data;
+    // Extract allergens from Spoonacular's data
+    const allergens = [];
+    if (response.data.dairyFree === false) allergens.push('dairy');
+    if (response.data.glutenFree === false) allergens.push('gluten');
+    if (response.data.vegetarian === false) allergens.push('meat');
+    // can add more checks for allergens
+    
+    return {
+      ...response.data,
+      allergens,
+      allergenNotes: response.data.warnings?.join(', ') || ''
+    };
   } catch (error) {
-    console.error('Recipe details API Error:', {
-      status: error.response?.status,
-      data: error.response?.data,
-      message: error.message,
-      config: error.config
-    });
-    throw new Error('Failed to get recipe details');
+    console.error('Recipe details error:', error);
+    throw error;
   }
 };
 

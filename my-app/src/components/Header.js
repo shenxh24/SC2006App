@@ -25,7 +25,7 @@ function Header({ user, profilePic, updateProfilePic }) {
       <nav className="nav">
         <Link to="/recipes" className="nav-link">Recipes</Link>
         <Link to="/tracker" className="nav-link">Tracker</Link>
-        <Link to="/hawker-centres" className="nav-link">Hawker Centres</Link>
+        <Link to="/food-locater" className="nav-link">Locate the Food</Link>
         <Link to="/favourites" className="nav-link">Favourites</Link>
         
         {user ? (

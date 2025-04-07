@@ -16,6 +16,12 @@ function RecipeDetails() {
   const {addfavourite, removefavourite, isfavourite } = useContext(FavouritesContext);
   const [isfavourited, setIsfavourited] = useState(false);
 
+  const getAllergens = (recipe) => {
+    if (Array.isArray(recipe.allergens)) return recipe.allergens;
+    if (typeof recipe.allergens === 'string') return recipe.allergens.split(',').map(a => a.trim());
+    return [];
+  };
+
   useEffect(() => {
     const fetchRecipeDetails = async () => {
       try {
@@ -68,6 +74,30 @@ function RecipeDetails() {
     <div className="recipe-details">
       <h1>{recipe.title}</h1>
       <img src={recipe.image} alt={recipe.title} className="recipe-main-image" />
+
+      {/* Allergen Warning Component */}
+      {recipe.allergens?.length > 0 && (
+  <div className="allergen-warning">
+    <div className="allergen-alert">
+      <span className="allergen-icon">⚠️</span>
+      <strong>Allergen Notice:</strong>
+      <div className="allergen-tags">
+        {getAllergens(recipe).map(allergen => (
+          <span 
+            key={allergen} 
+            className={`allergen-tag ${allergen.toLowerCase().replace(/\s+/g, '-')}`}
+          >
+            {allergen}
+          </span>
+        ))}
+      </div>
+      {recipe.allergenNotes && (
+        <p className="allergen-note">{recipe.allergenNotes}</p>
+      )}
+    </div>
+  </div>
+)}
+
       
       <div className="nutrition-summary">
         <p><strong>{Math.round(calories)} kCal</strong></p>
