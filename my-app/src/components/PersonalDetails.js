@@ -1,11 +1,11 @@
-import React, { useState} from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import '../App.css';
 
 const PersonalDetails = ({ user, setDailyGoals }) => {
-  // Initialize state with localStorage data or defaults
+  // Initialize state first (before any conditionals)
   const [formData, setFormData] = useState(() => {
-    const savedData = localStorage.getItem('personalDetails');
+    const savedData = user ? localStorage.getItem(`personalDetails_${user.uid}`) : null;
     return savedData ? JSON.parse(savedData) : {
       age: '',
       height: '',
@@ -19,6 +19,11 @@ const PersonalDetails = ({ user, setDailyGoals }) => {
       carbGoal: 300
     };
   });
+
+  // Then check for auth
+  if (!user) {
+    return <Navigate to="/signin" replace />;
+  }
 
   const activityLevels = [
     'Sedentary (little or no exercise)',
@@ -39,10 +44,7 @@ const PersonalDetails = ({ user, setDailyGoals }) => {
   const handleSave = (e) => {
     e.preventDefault();
     
-    // Save to localStorage
-    localStorage.setItem('personalDetails', JSON.stringify(formData));
-    
-    // Update daily goals if they've changed
+    localStorage.setItem(`personalDetails_${user.uid}`, JSON.stringify(formData));
     setDailyGoals({
       calories: Number(formData.calorieGoal),
       protein: Number(formData.proteinGoal),
@@ -54,8 +56,10 @@ const PersonalDetails = ({ user, setDailyGoals }) => {
   };
 
   const calculateGoals = () => {
-    // Basic Harris-Benedict equation for demonstration
-    if (!formData.weight || !formData.height || !formData.age) return;
+    if (!formData.weight || !formData.height || !formData.age || !formData.gender) {
+      alert('Please fill in all required fields (age, height, weight, and gender)');
+      return;
+    }
     
     const weightKg = parseFloat(formData.weight);
     const heightCm = parseFloat(formData.height);
@@ -68,18 +72,16 @@ const PersonalDetails = ({ user, setDailyGoals }) => {
       bmr = 447.593 + (9.247 * weightKg) + (3.098 * heightCm) - (4.330 * age);
     }
     
-    // Apply activity multiplier
     const activityMultipliers = [1.2, 1.375, 1.55, 1.725, 1.9];
     const activityIndex = activityLevels.indexOf(formData.activityLevel);
     const tdee = bmr * (activityMultipliers[activityIndex] || 1.2);
     
-    // Update form data with calculated goals
     setFormData(prev => ({
       ...prev,
       calorieGoal: Math.round(tdee),
-      proteinGoal: Math.round(weightKg * 1.8), // 1.8g per kg of body weight
-      fatGoal: Math.round((tdee * 0.25) / 9), // 25% of calories from fat
-      carbGoal: Math.round((tdee * 0.5) / 4) // 50% of calories from carbs
+      proteinGoal: Math.round(weightKg * 1.8),
+      fatGoal: Math.round((tdee * 0.25) / 9),
+      carbGoal: Math.round((tdee * 0.5) / 4)
     }));
   };
 
@@ -100,6 +102,7 @@ const PersonalDetails = ({ user, setDailyGoals }) => {
                 onChange={handleChange}
                 min="10"
                 max="120"
+                required
               />
             </div>
             <div className="form-group">
@@ -111,6 +114,7 @@ const PersonalDetails = ({ user, setDailyGoals }) => {
                 onChange={handleChange}
                 min="100"
                 max="250"
+                required
               />
             </div>
             <div className="form-group">
@@ -123,6 +127,7 @@ const PersonalDetails = ({ user, setDailyGoals }) => {
                 min="30"
                 max="300"
                 step="0.1"
+                required
               />
             </div>
           </div>
@@ -134,6 +139,7 @@ const PersonalDetails = ({ user, setDailyGoals }) => {
                 name="gender"
                 value={formData.gender}
                 onChange={handleChange}
+                required
               >
                 <option value="">Select</option>
                 <option value="male">Male</option>
