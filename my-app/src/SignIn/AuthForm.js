@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { auth, provider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '../firebase'; // Import necessary functions from firebase.js
 
 const AuthForm = () => {
@@ -68,6 +68,13 @@ const AuthForm = () => {
         />
         <button type="submit">{isLogin ? 'Log In' : 'Sign Up'}</button>
       </form>
+
+      {/* Add this block for "Forgot Password" */}
+      {isLogin && (
+        <div className="forgot-password">
+          <Link to="/forgot-password">Forgot Password?</Link>
+        </div>
+      )}
   
       <button className="toggle-auth" onClick={() => setIsLogin(!isLogin)}>
         {isLogin ? 'Need to sign up?' : 'Already have an account?'}

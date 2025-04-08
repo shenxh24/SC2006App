@@ -8,6 +8,8 @@ import RecipesOverview from './components/RecipesOverview';
 import RecipeDetails from './components/RecipeDetails';
 import Tracker from './components/Tracker';
 import FoodLocater from './components/FoodLocater';
+import ForgotPassword from './SignIn/ForgotPassword';
+import ResetPassword from './SignIn/ResetPassword';
 import AuthForm from './SignIn/AuthForm';
 import ReviewsPage from './components/ReviewsPage';
 import Header from './components/Header';
@@ -101,6 +103,8 @@ function App() {
             path="/signin" 
             element={!user ? <AuthForm /> : <Navigate to="/" replace />} 
           />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/reviews-page" element={<ReviewsPage user={user} />} />
           <Route path="/favourites" element={<FavouritesPage user={user} />} />
         </Routes>

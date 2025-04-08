@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../firebase';  // Adjust the path if needed
+import { auth } from '../firebase';
 import { confirmPasswordReset } from 'firebase/auth';
+import { Link } from 'react-router-dom'; // Import Link for navigation
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
@@ -10,12 +11,9 @@ const ResetPassword = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Extract the oobCode from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('oobCode');
-    if (code) {
-      setOobCode(code);
-    }
+    if (code) setOobCode(code);
   }, []);
 
   const handlePasswordReset = async () => {
@@ -23,7 +21,7 @@ const ResetPassword = () => {
       if (password) {
         await confirmPasswordReset(auth, oobCode, password);
         alert('Password has been reset successfully!');
-        navigate('/signin');  // Redirect to login page after successful reset
+        navigate('/signin');
       } else {
         setError('Please enter a new password.');
       }
@@ -33,17 +31,33 @@ const ResetPassword = () => {
   };
 
   return (
-    <div>
-      <h2>Enter New Password</h2>
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Enter new password"
-        required
-      />
-      <button onClick={handlePasswordReset}>Reset Password</button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+    <div className="auth-container">
+      <h2>Reset Password</h2>
+      
+      <div className="auth-form">
+        <label>New Password:</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter new password"
+          required
+          className="auth-input"
+        />
+        
+        <button 
+          onClick={handlePasswordReset}
+          className="auth-button"
+        >
+          Reset Password
+        </button>
+
+        {error && <p className="error-message">{error}</p>}
+      </div>
+
+      <div className="auth-footer">
+        <Link to="/signin" className="auth-link">Back to Login</Link>
+      </div>
     </div>
   );
 };
