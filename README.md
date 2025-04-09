@@ -71,7 +71,11 @@ Make sure you have the following installed:
 2.Lee Beckham
 3.Ponnusamy Saishenetha
 4.Seth Yew
-5. Sim Shuen Hwee
-
+5.Sim Shuen Hwee
+1. [Ang Yingjie](#Ang Yingjie)
+2. [Lee Beckham](#Lee Beckham)
+3. [Ponnusamy Saishenetha](#Ponnusamy Saishenetha)
+4. [Seth Yew](#Seth Yew)
+5. [Sim Shuen Hwee](#Sim Shuen Hwee)
 
 
