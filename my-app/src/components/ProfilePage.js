@@ -4,15 +4,20 @@ import ProfilePictureUpload from './ProfilePictureUpload';
 import '../App.css';
 
 function ProfilePage({ user, profilePic, updateProfilePic }) {
-  // Get personal details from localStorage or use defaults
-  const personalDetails = JSON.parse(localStorage.getItem('personalDetails')) || {
-    age: '',
-    height: '',
-    weight: '',
-    gender: '',
-    activityLevel: '',
-    dietaryPreferences: []
-  };
+  // Get personal details from localStorage using the user's UID
+  const personalDetails = user ? 
+    JSON.parse(localStorage.getItem(`personalDetails_${user.uid}`)) || {
+      age: '',
+      height: '',
+      weight: '',
+      gender: '',
+      activityLevel: '',
+      dietaryPreferences: []
+    } : null;
+
+  if (!user) {
+    return <div className="not-logged-in">Please sign in to view your profile</div>;
+  }
 
   return (
     <div className="profile-page">

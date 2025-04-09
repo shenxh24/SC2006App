@@ -52,7 +52,6 @@ function Header({ user, profilePic, updateProfilePic }) {
             {showDropdown && (
               <div className="profile-dropdown">
                 <Link to="/profile" className="dropdown-item">My Profile</Link>
-                <Link to="/settings" className="dropdown-item">Settings</Link>
                 <button onClick={handleSignOut} className="dropdown-item sign-out-btn">
                   Sign Out
                 </button>
