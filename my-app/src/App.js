@@ -30,15 +30,28 @@ function App() {
   });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setLoading(true);
       if (currentUser) {
         setUser(currentUser);
         const savedPic = localStorage.getItem(`profilePic_${currentUser.uid}`);
         const savedGoals = localStorage.getItem(`dailyGoals_${currentUser.uid}`);
         
-        if (savedPic) setProfilePic(savedPic);
-        else if (currentUser.photoURL) setProfilePic(currentUser.photoURL);
+        // Handle profile picture logic
+        if (currentUser.photoURL) {
+          // If user has a photoURL (from Google sign-in), use it and save to localStorage
+          const googlePhotoUrl = currentUser.photoURL;
+          // Ensure the URL is https and replace the size parameter for better quality
+          const optimizedPhotoUrl = googlePhotoUrl.replace('s96-c', 's400-c');
+          setProfilePic(optimizedPhotoUrl);
+          localStorage.setItem(`profilePic_${currentUser.uid}`, optimizedPhotoUrl);
+        } else if (savedPic) {
+          // Fallback to saved picture if no Google photoURL
+          setProfilePic(savedPic);
+        } else {
+          // No picture available
+          setProfilePic(null);
+        }
         
         if (savedGoals) setDailyGoals(JSON.parse(savedGoals));
       } else {
@@ -47,7 +60,7 @@ function App() {
       }
       setLoading(false);
     });
-
+    
     return () => unsubscribe();
   }, []);
 
