@@ -66,8 +66,12 @@ Make sure you have the following installed:
 - **Node.js** (v16.20.2 or higher)
 - **npm** (v9.6.7 or higher)
 
-### Clone the repository
+### Contributers:
+1.Ang Yingjie
+2.Lee Beckham
+3.Ponnusamy Saishenetha
+4.Seth Yew
+5. Sim Shuen Hwee
 
-```bash
-git clone https://github.com/yourusername/bitebybyte.git
-cd bitebybyte
+
+
