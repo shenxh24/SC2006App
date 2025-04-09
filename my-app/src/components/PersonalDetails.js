@@ -101,7 +101,7 @@ const PersonalDetails = ({ user, setDailyGoals }) => {
                 value={formData.age}
                 onChange={handleChange}
                 min="10"
-                max="120"
+                max="100"
                 required
               />
             </div>
@@ -113,7 +113,7 @@ const PersonalDetails = ({ user, setDailyGoals }) => {
                 value={formData.height}
                 onChange={handleChange}
                 min="100"
-                max="250"
+                max="210"
                 required
               />
             </div>
@@ -125,7 +125,7 @@ const PersonalDetails = ({ user, setDailyGoals }) => {
                 value={formData.weight}
                 onChange={handleChange}
                 min="30"
-                max="300"
+                max="200"
                 step="0.1"
                 required
               />

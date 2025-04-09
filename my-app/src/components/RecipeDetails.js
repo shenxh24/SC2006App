@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom'; // Added useNavigate
 import { FavouritesContext } from './FavouritesContext';
 import axios from 'axios';
+import { auth } from '../firebase'; // Import auth from firebase
 import '../App.css';
 
 function RecipeDetails() {
@@ -11,10 +12,19 @@ function RecipeDetails() {
   const [error, setError] = useState(null);
   const [showIngredients, setShowIngredients] = useState(false);
   const [showRecipe, setShowRecipe] = useState(false);
-  
+  const [user, setUser] = useState(null); // Track user auth state
+  const navigate = useNavigate(); // Initialize navigate
 
-  const {addfavourite, removefavourite, isfavourite } = useContext(FavouritesContext);
+  const { addfavourite, removefavourite, isfavourite } = useContext(FavouritesContext);
   const [isfavourited, setIsfavourited] = useState(false);
+
+  // Check auth state on component mount
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const getAllergens = (recipe) => {
     if (Array.isArray(recipe.allergens)) return recipe.allergens;
@@ -34,7 +44,6 @@ function RecipeDetails() {
         }
         
         setRecipe(response.data);
-        // Check if this recipe is already favourited
         setIsfavourited(isfavourite(response.data.id));
       } catch (err) {
         console.error('Full error details:', {
@@ -53,6 +62,12 @@ function RecipeDetails() {
   }, [id, isfavourite]);
 
   const handlefavouriteClick = () => {
+    if (!user) {
+      // Redirect to login page with a return URL
+      navigate('/signin', { state: { from: `/recipe/${id}` } });
+      return;
+    }
+
     if (isfavourited) {
       removefavourite(recipe.id);
     } else {
@@ -65,7 +80,6 @@ function RecipeDetails() {
   if (error) return <div className="error">{error}</div>;
   if (!recipe) return <div className="error">Recipe not found</div>;
 
-  // Extract nutrition data
   const calories = recipe.nutrition?.nutrients.find(n => n.name === 'Calories')?.amount || 0;
   const protein = recipe.nutrition?.nutrients.find(n => n.name === 'Protein')?.amount || 0;
   const fat = recipe.nutrition?.nutrients.find(n => n.name === 'Fat')?.amount || 0;
@@ -75,29 +89,27 @@ function RecipeDetails() {
       <h1>{recipe.title}</h1>
       <img src={recipe.image} alt={recipe.title} className="recipe-main-image" />
 
-      {/* Allergen Warning Component */}
       {recipe.allergens?.length > 0 && (
-  <div className="allergen-warning">
-    <div className="allergen-alert">
-      <span className="allergen-icon">⚠️</span>
-      <strong>Allergen Notice:</strong>
-      <div className="allergen-tags">
-        {getAllergens(recipe).map(allergen => (
-          <span 
-            key={allergen} 
-            className={`allergen-tag ${allergen.toLowerCase().replace(/\s+/g, '-')}`}
-          >
-            {allergen}
-          </span>
-        ))}
-      </div>
-      {recipe.allergenNotes && (
-        <p className="allergen-note">{recipe.allergenNotes}</p>
+        <div className="allergen-warning">
+          <div className="allergen-alert">
+            <span className="allergen-icon">⚠️</span>
+            <strong>Allergen Notice:</strong>
+            <div className="allergen-tags">
+              {getAllergens(recipe).map(allergen => (
+                <span 
+                  key={allergen} 
+                  className={`allergen-tag ${allergen.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                  {allergen}
+                </span>
+              ))}
+            </div>
+            {recipe.allergenNotes && (
+              <p className="allergen-note">{recipe.allergenNotes}</p>
+            )}
+          </div>
+        </div>
       )}
-    </div>
-  </div>
-)}
-
       
       <div className="nutrition-summary">
         <p><strong>{Math.round(calories)} kCal</strong></p>
@@ -107,15 +119,19 @@ function RecipeDetails() {
         <p>Servings: {recipe.servings}</p>
       </div>
 
-      {/* favourite Button */}
+      {/* Favourite Button with login check */}
       <button 
         onClick={handlefavouriteClick}
         className={`favourite-btn ${isfavourited ? 'active' : ''}`}
+        title={!user ? "You need to log in to save favorites" : ""}
       >
         {isfavourited ? '❤️ Remove from Favourites' : '♡ Add to Favourites'}
       </button>
+      {!user && (
+        <p className="login-prompt">Log in to save your favorite recipes</p>
+      )}
 
-      {/* Toggle Ingredients */}
+      {/* Rest of the component remains the same */}
       <button 
         onClick={() => setShowIngredients(!showIngredients)}
         className="toggle-button"
@@ -135,7 +151,6 @@ function RecipeDetails() {
         </div>
       )}
 
-      {/* Toggle Recipe Steps */}
       <button 
         onClick={() => setShowRecipe(!showRecipe)}
         className="toggle-button"
