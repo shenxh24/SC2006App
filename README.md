@@ -70,13 +70,13 @@ Make sure you have the following installed:
 In the server directory, run:
 
 npm start
-The backend will run on http://localhost:5001.
+**The backend will run on http://localhost:5001.**
 
 ### Start the Frontend
 In the client directory, run:
 
 npm start
-The frontend will run on http://localhost:3000.
+**The frontend will run on http://localhost:3000.**
 
 Open http://localhost:3000 in your browser to interact with the BitebyByte platform!
 
