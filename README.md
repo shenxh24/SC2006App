@@ -10,9 +10,7 @@
 3. [Technologies Used](#technologies-used)
 4. [Installation](#installation)
 5. [Usage](#usage)
-6. [Contributing](#contributing)
-7. [License](#license)
-8. [Acknowledgements](#acknowledgements)
+6. [Acknowledgements](#acknowledgements)
 
 ---
 
@@ -65,6 +63,31 @@ Make sure you have the following installed:
 
 - **Node.js** (v16.20.2 or higher)
 - **npm** (v9.6.7 or higher)
+
+## Usage
+
+### Start the Backend
+In the server directory, run:
+
+npm start
+The backend will run on http://localhost:5001.
+
+### Start the Frontend
+In the client directory, run:
+
+npm start
+The frontend will run on http://localhost:3000.
+
+Open http://localhost:3000 in your browser to interact with the BitebyByte platform!
+
+
+## Acknowledgements
+
+- **Google Maps API for location and map services**
+- **Spoonacular API for recipe data**
+- **Firebase for authentication, database, and hosting**
+- **React for frontend UI**
+- **Node.js and Express for the backend server**
 
 ### Contributers:
 
