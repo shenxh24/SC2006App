@@ -1,6 +1,6 @@
 # BitebyByte - Health and Nutrition Platform
 
-![BitebyByte Logo](my-app/public/remove.png)
+![BitebyByte Logo](my-app/public/removebg.png)
 **BitebyByte** is a web-based health and nutrition platform designed to empower users to lead healthier lives through intelligent meal tracking, personalized recipe generation, and real-time food location services. The platform offers a user-friendly interface that helps users manage their dietary goals and make smarter food choices.
 
 ---
