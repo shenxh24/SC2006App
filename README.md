@@ -65,53 +65,69 @@ Make sure you have the following installed:
 To run the BiteByByte platform locally, follow these steps:
 
 1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/yourusername/bitebybyte.git
-   cd bitebybyte```
+```bash
+git clone https://github.com/yourusername/bitebybyte.git
+cd bitebybyte
+```
 
 2. **Install dependencies:**
  Install both frontend and backend dependencies using npm:
-```npm install```
-
+```bash
+npm install
+``` 
 ## Usage
 
 ### Start the Backend
 In the server directory, run:
 
-```npm run server```
-
-**The backend will run on http://localhost:5001.**
+```bash
+npm run server
+```
+The backend will run on http://localhost:5001.
 
 ### Start the Frontend
 In the client directory, run:
 
-```npm run client```
+```bash
+npm run client
+```
 
-**The frontend will run on http://localhost:3000.**
+The frontend will run on http://localhost:3000.
 
-Open http://localhost:3000 in your browser to interact with the BitebyByte platform!
+**Open http://localhost:3000 in your browser to interact with the BitebyByte platform!**
 
-Set up environment variables: Create a `.env file in the root directory and add the following variables:
-```REACT_APP_GOOGLE_MAPS_API_KEY=AIzaSyArJ07huGvQJfifEh5tr2yr_toSbCkP6yo 
-   REACT_APP_SPOONACULAR_API_KEY=92f7abf67e7b49f0a04d4a265bccba27``` 
+Set up environment variables: Create a ```.env``` file in the root directory and add the following variables:
+```bash
+REACT_APP_GOOGLE_MAPS_API_KEY=AIzaSyArJ07huGvQJfifEh5tr2yr_toSbCkP6yo 
+REACT_APP_SPOONACULAR_API_KEY=92f7abf67e7b49f0a04d4a265bccba27
+``` 
 
 
-**Once the system is running, you can:** 
+**Once the system is running, you can:**
 
-1.Create an Account: Sign up via email or Google account.
-2.Track Your Nutrition: Log meals and track your progress with the Nutrition Tracker.
-3.Search Recipes: Browse and search for recipes by ingredients, dietary preferences, and cuisines.
-4.Locate Nearby Food: Use the Food Locator to find healthy restaurants and directions.
+1. **Create an Account**: Sign up via email or Google account.
+2. **Track Your Nutrition**: Log meals and track your progress with the Nutrition Tracker.
+3. **Search Recipes**: Browse and search for recipes by ingredients, dietary preferences, and cuisines.
+4. **Locate Nearby Food**: Use the Food Locator to find healthy restaurants and directions.
 
-## Contributing 
+## Contributing
 
 We welcome contributions to BiteByByte! If you'd like to contribute:
 
-Fork the repository.
-Create a new branch `(git checkout -b feature/your-feature).`
-Commit your changes `(git commit -am 'Add new feature')`.`
-Push to the branch `(git push origin feature/your-feature).`
-Create a new pull request.
+1. Fork the repository.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature/your-feature
+   ```
+3. Commit your changes
+   ```bash
+   git commit -am 'Add new feature'
+   ```
+4. Push to the branch
+   ```bash
+   git push origin feature/your-feature
+   ```
+5. Create a new pull request.
 
 
 ## Acknowledgements
