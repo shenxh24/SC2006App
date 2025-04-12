@@ -1,5 +1,6 @@
 # BitebyByte - Health and Nutrition Platform
 
+![BiteByByte Logo](./my-app/logo.png)
 
 ## Table of Contents
 1. [Introduction](#introduction)
