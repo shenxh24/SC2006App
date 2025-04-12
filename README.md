@@ -1,10 +1,6 @@
 # BitebyByte - Health and Nutrition Platform
 
 
-**BitebyByte** is a web-based health and nutrition platform designed to empower users to lead healthier lives through intelligent meal tracking, personalized recipe generation, and real-time food location services. The platform offers a user-friendly interface that helps users manage their dietary goals and make smarter food choices.
-
----
-
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Features](#features)
@@ -13,11 +9,12 @@
 5. [Usage](#usage)
 6. [Acknowledgements](#acknowledgements)
 
----
+### Introduction
+BiteByByte is a web-based health and nutrition platform designed to help Singaporeans lead healthier lives by offering personalized meal tracking, recipe generation, and real-time food location services. The platform integrates key features such as user profile customization, calorie tracking, ingredient management, and AI-driven recipe generation, adapting dynamically to individual dietary preferences, allergies, and fitness goals.
 
-## Introduction
+The platform utilizes external APIs (Google Maps, Spoonacular) to provide real-time data on nearby food options, thus enhancing convenience and enabling users to make informed choices on the go.
 
-**BitebyByte** provides personalized health recommendations to Singaporeans, helping them track their calories, manage allergies, and meet their fitness goals. It uses real-time APIs like **Google Maps** and **Spoonacular** to provide nearby food options and recipes that suit the user’s dietary preferences and goals.
+
 
 ---
 
@@ -64,6 +61,16 @@ Make sure you have the following installed:
 
 - **Node.js** (v16.20.2 or higher)
 - **npm** (v9.6.7 or higher)
+  
+To run the BiteByByte platform locally, follow these steps:
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/bitebybyte.git
+   cd bitebybyte
+
+Install dependencies: Install both frontend and backend dependencies using npm:
+npm install
 
 ## Usage
 
@@ -82,6 +89,30 @@ npm start
 **The frontend will run on http://localhost:3000.**
 
 Open http://localhost:3000 in your browser to interact with the BitebyByte platform!
+
+Set up environment variables: Create a .env file in the root directory and add the following variables:
+REACT_APP_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
+REACT_APP_SPOONACULAR_API_KEY=your-spoonacular-api-key
+Run the development server: To start both the frontend and backend, use:
+npm start
+Open the app: Visit http://localhost:3000 in your browser.
+Usage
+
+Once the system is running, you can:
+
+Create an Account: Sign up via email or Google account.
+Track Your Nutrition: Log meals and track your progress with the Nutrition Tracker.
+Search Recipes: Browse and search for recipes by ingredients, dietary preferences, and cuisines.
+Locate Nearby Food: Use the Food Locator to find healthy restaurants and directions.
+Contributing
+
+We welcome contributions to BiteByByte! If you'd like to contribute:
+
+Fork the repository.
+Create a new branch (git checkout -b feature/your-feature).
+Commit your changes (git commit -am 'Add new feature').
+Push to the branch (git push origin feature/your-feature).
+Create a new pull request.
 
 
 ## Acknowledgements
