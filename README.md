@@ -69,49 +69,48 @@ To run the BiteByByte platform locally, follow these steps:
    git clone https://github.com/yourusername/bitebybyte.git
    cd bitebybyte
 
-Install dependencies: Install both frontend and backend dependencies using npm:
-npm install
+2. **Install dependencies: and **
+ Install both frontend and backend dependencies using npm:
+```npm install
 
 ## Usage
 
 ### Start the Backend
 In the server directory, run:
 
-npm start
+```npm run server
 
 **The backend will run on http://localhost:5001.**
 
 ### Start the Frontend
 In the client directory, run:
 
-npm start
+```npm run client 
 
 **The frontend will run on http://localhost:3000.**
 
 Open http://localhost:3000 in your browser to interact with the BitebyByte platform!
 
-Set up environment variables: Create a .env file in the root directory and add the following variables:
-REACT_APP_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
-REACT_APP_SPOONACULAR_API_KEY=your-spoonacular-api-key
-Run the development server: To start both the frontend and backend, use:
-npm start
-Open the app: Visit http://localhost:3000 in your browser.
-Usage
+Set up environment variables: Create a `.env file in the root directory and add the following variables:
+```REACT_APP_GOOGLE_MAPS_API_KEY=AIzaSyArJ07huGvQJfifEh5tr2yr_toSbCkP6yo 
+   REACT_APP_SPOONACULAR_API_KEY=92f7abf67e7b49f0a04d4a265bccba27 
 
-Once the system is running, you can:
 
-Create an Account: Sign up via email or Google account.
-Track Your Nutrition: Log meals and track your progress with the Nutrition Tracker.
-Search Recipes: Browse and search for recipes by ingredients, dietary preferences, and cuisines.
-Locate Nearby Food: Use the Food Locator to find healthy restaurants and directions.
-Contributing
+**Once the system is running, you can**:
+
+1.Create an Account: Sign up via email or Google account.
+2.Track Your Nutrition: Log meals and track your progress with the Nutrition Tracker.
+3.Search Recipes: Browse and search for recipes by ingredients, dietary preferences, and cuisines.
+4.Locate Nearby Food: Use the Food Locator to find healthy restaurants and directions.
+
+## Contributing 
 
 We welcome contributions to BiteByByte! If you'd like to contribute:
 
 Fork the repository.
-Create a new branch (git checkout -b feature/your-feature).
-Commit your changes (git commit -am 'Add new feature').
-Push to the branch (git push origin feature/your-feature).
+Create a new branch `(git checkout -b feature/your-feature).
+Commit your changes `(git commit -am 'Add new feature').
+Push to the branch `(git push origin feature/your-feature).
 Create a new pull request.
 
 
