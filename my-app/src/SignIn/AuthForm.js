@@ -1,0 +1,95 @@
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { auth, provider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '../firebase'; // Import necessary functions from firebase.js
+
+const AuthForm = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLogin, setIsLogin] = useState(true); // Toggle between login and sign-up
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  // Handle Google Sign-In
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log('User signed in with Google:', user);
+      alert('✅ Logged in with Google!');
+      navigate('/'); // Redirect to home or dashboard
+    } catch (error) {
+      console.error("Error during Google sign-in:", error);
+      alert('❌ Failed to sign in with Google.');
+    }
+  };
+
+  // Handle email/password sign-up
+  const handleEmailSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert('✅ Account created!');
+      navigate('/'); // Redirect to home or dashboard
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  // Handle email/password login
+  const handleEmailLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert('✅ Logged in!');
+      navigate('/'); // Redirect to home or dashboard
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  return (
+    <div className="auth-container">
+      <h2>{isLogin ? 'Log In' : 'Sign Up'}</h2>
+  
+      <form className="auth-form" onSubmit={isLogin ? handleEmailLogin : handleEmailSignUp}>
+        <label>Email:</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <label>Password:</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit">{isLogin ? 'Log In' : 'Sign Up'}</button>
+      </form>
+
+      {/* Add this block for "Forgot Password" */}
+      {isLogin && (
+        <div className="forgot-password">
+          <Link to="/forgot-password">Forgot Password?</Link>
+        </div>
+      )}
+  
+      <button className="toggle-auth" onClick={() => setIsLogin(!isLogin)}>
+        {isLogin ? 'Need to sign up?' : 'Already have an account?'}
+      </button>
+  
+      <div className="social-auth">
+        <h3>Or Sign In with Google</h3>
+        <button className="google-btn" onClick={handleGoogleSignIn}>
+          <img className="google-icon" src="https://www.google.com/favicon.ico" alt="Google" />
+          Sign in with Google
+        </button>
+      </div>
+  
+      {error && <p className="error-message">{error}</p>}
+    </div>
+  )
+}
+export default AuthForm;
